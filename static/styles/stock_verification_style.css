@@ -1,0 +1,72 @@
+.product {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px auto;
+    border-radius: 15px;
+    background-color: #f9f9f9;
+    width: 80%;
+    text-align: center;
+}
+
+.product .detail {
+    margin-bottom: 10px;
+}
+
+.product .product-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.product .product-qte,
+.product .product-price {
+    font-size: 14px;
+    color: #666;
+}
+
+.product .form-container {
+    margin-bottom: 10px;
+}
+
+.product .form-row {
+    margin-bottom: 10px;
+}
+
+.product .form-row label {
+    font-size: 14px;
+    color: #333;
+}
+
+.product .form-row input {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Add this to your CSS file */
+
+.last-verifications {
+    width: 60%;
+    margin: 15px auto;
+}
+
+.last-verification {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 15px;
+    background-color: #ffffff;
+}
+
+.last-verification-date {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.last-verification-gerant {
+    font-size: 14px;
+    color: #666;
+}

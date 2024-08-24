@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}<title>StockManager</title>{% endblock %}
+{% block style_page %}
+    <link rel="stylesheet" href="{% static 'styles/history_style.css' %}">
+{% endblock %}
+{% block content %}
+    <form action="/supplying_history/" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="form-row">
+                <input name="query" type="text" id="search" placeholder="{% trans "Rechercher un approvisionnement" %}" {% if query %} value="{{ query }}" {% endif %}>
+            </div>
+            <div class="form-row">
+                <label><input name="by_date" type="checkbox" id="search-by-date" {% if by_date %} checked {% endif %}>{% trans "Date" %}</label>
+                <label><input name="by_four" type="checkbox" id="search-by-four" {% if by_four %} checked {% endif %}>{% trans "Fournisseur" %}</label>
+                <label><input name="by_product" type="checkbox" id="search-by-product" {% if by_product %} checked {% endif %}>Produit</label>
+                <label><input name="by_gerant" type="checkbox" id="search-by-gerant" {% if by_gerant %} checked {% endif %}>{% trans "Gerant" %}</label>
+            </div>
+            <div class="buttons-line">
+                <button class="normal-action" id="search-button" onclick="">{% trans "Rechercher" %}</button>
+            </div>
+        </div>
+    </form>
+
+    <div id="result">
+        {% if supplies %}
+            {% for supply in supplies %}
+                <div class="supply">
+                    <input type="hidden" class="supply-id" value="{{ supply.id_appro }}">
+                    <div class="supply-info">
+                        <p class="supply-date">Date: {{ supply.date_achat|date:"l d F Y f" }}</p>
+                        <p class="supply-gerant">Validé Par: {% if supply.gerant %} {{ supply.gerant.nom }} {% else %} Inconnu {% endif %}</p>
+                        <p class="supply-gerant">Fourni par: {% if supply.four %} {{ supply.four }} {% else %} Inconnu {% endif %}</p>
+                        {% if supply.site %}<p class="supply-gerant">Site: {{ supply.site.nom }}</p>{% endif %}
+                    </div>
+                    <div class="supplied-product">
+                        {{ supply.qte }} unités de {{ supply.prod.nom }} ({{ supply.prod.id_prod }}) acheté à {{ supply.prix_achat }}
+                        {{ settings.currency }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% elif error %}
+            <p id="error">{{ error }}</p>
+        {% else %}
+            <p id="no-result">{% trans "Aucun approvisionnement trouvée" %}</p>
+        {% endif %}
+    </div>
+
+    <!-- Add this inside your HTML file where you want the button and info bubble -->
+    <img id="infoBubble" class="info-bubble" src="{% static 'info.png' %}">
+    <div id="expandedInfo" class="expanded-info">
+        <h2 class="title">{% trans "Comment rechercher" %}</h2>
+        <div id="infoText">
+            <p>{% trans "Rechercher en utilisant des critères séparés par des tires (critère1-valeur , critère2-valeur)" %}</p>
+            <p>{% trans "Rechercher avec le nom d'un produit -> produit-nom du produit" %}</p>
+            <p>{% trans "Rechercher avec le nom d'un gerant -> gerant-nom du gerant" %}</p>
+            <p>{% trans "Rechercher avec le nom d'un fournisseur -> four-nom du four" %}</p>
+            <p>{% trans "Rechercher avec la date -> jj/mm/aaaa ou jj/mm/aaaa ou jj/mm/aaaa hh: ou jj/mm/aaaa hh:mm" %}</p>
+            <p>{% trans "Exemple: gerant-ousmane , date-12/01/2022 19-23" %}</p>
+            <p>{% trans "Exemple: gerant-Housseine , 12/01/2022 , four-Ousmane" %}</p>
+
+        </div>
+        <div class="buttons-line">
+            <button class="normal-action" onclick="() => this.parentElement.parentElement.classList.add('hidden')">{% trans "Fermer" %}</button>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script_page %}
+{% endblock %}

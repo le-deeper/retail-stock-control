@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}<title>StockManager</title>{% endblock %}
+{% block style_page %}
+    <link rel="stylesheet" href="{% static 'styles/login_style.css' %}">
+{% endblock %}
+{% block content %}
+    <article id="login-form">
+        <h2 class="title">{% trans "Connexion" %}</h2>
+        <div class="form-container">
+            <div class="form-row">
+                <input type="text" id="username" placeholder="{% trans "Nom d'utilisateur" %}">
+            </div>
+            <div class="form-row">
+                <input type="password" id="password" placeholder='{% trans "Mot de passe" %}'>
+            </div>
+            <div class="form-row">
+                <button id="login-btn" onclick="login()" class="first-button">{% trans "Se connecter" %}</button>
+            </div>
+        </div>
+    </article>
+{% endblock %}
+{% block script_page %}
+    <script src="{% static 'scripts/login_script.js' %}"></script>
+{% endblock %}

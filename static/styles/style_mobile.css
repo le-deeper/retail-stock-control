@@ -1,0 +1,146 @@
+@media (max-width: 1200px) {
+
+    .result-title {
+        font-size: 0.8em;
+    }
+
+    /* Menu, fixé en haut et a un effet d'ombre  */
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        border-bottom: 1px #000 solid;
+        box-shadow: 2px 0px 2px 0px #333;
+        justify-content: flex-start;
+        margin-left: 20px;
+    }
+
+    /* Style du menu burger */
+    #burger {
+        cursor: pointer;
+        position: fixed;
+        top: 0rem;
+        right: 2rem;
+    }
+
+    /* 3 barres */
+    #burger span {
+        width: 35px;
+        height: 5px;
+        background-color: #000;
+        border-radius: 5px;
+        margin: auto;
+        margin-top: 40px;
+        position: relative;
+        display: block;
+        transition: background-color 0.5s ease-in-out;
+    }
+
+    /* On définit la durée et la vitesse de transition de tout changement de styles */
+    #burger span::before,
+    #burger span::after {
+        content: "";
+        width: 100%;
+        height: 5px;
+        position: absolute;
+        background-color: black;
+        border-radius: 5px;
+        transition: all 1s ease;
+    }
+
+    #burger span::before {
+        transform: translateY(-10px);
+    }
+
+    #burger span::after {
+        transform: translateY(10px);
+    }
+
+    /* Effet lorsque le menu est cliqué */
+
+    /*
+    La barre du millieu est cachée pour garder les span::after et ::before
+    tout en rendant span transparent */
+    #burger.active span {
+        background-color: transparent;
+    }
+
+    /* On applique une rotation aux barres sud et nord pour que celles-ci forment une croix */
+    #burger.active span::before {
+        transform: rotate(45deg);
+
+    }
+
+    #burger.active span::after {
+        transform: rotate(-45deg);
+    }
+
+    /* Menu, caché grâce à la valeur de max-height (0) et overflow (hidden) */
+    #menu {
+        top: 4rem;
+        max-height: 0;
+        overflow: hidden;
+        height: auto;
+        transition: max-height 0.75s ease-out;
+    }
+
+    /* Style des éléments du menu, avec une bordure noire en bas et occupe toute la longueur */
+    /* On définit une durée pour la transition de la couleur du fond et de max-height */
+    #menu>ul>li {
+        border-bottom: 1px solid #000;
+        transition: background-color 0.75s ease-out;
+    }
+
+    #menu li {
+        display: block;
+        width: 100%;
+    }
+
+    #menu a {
+        width: 100%;
+    }
+
+    #menu ul ul {
+        /* display: none; */
+        width: 100%;
+        background-color: var(--bg-color);
+        /* Couleur de fond du sous-menu */
+        transition: max-height 0.75s ease-out;
+    }
+
+    /* Effets lorsque le menu doit être afficher */
+    /* Effet de déroulement grâce à la transition en max-height: 0 et max-height: 1000px */
+    #menu.active {
+        max-height: 1000px;
+        transition: max-height 1.5s ease-out;
+    }
+
+    /* Bordure de l'élément caché */
+    #menu ul li.active {
+        background-color: var(--fg-color);
+        border-bottom: none;
+    }
+
+    /* Bordure nord et sud des éléments du sous-menu affichées et noires*/
+    #menu ul li.active>ul {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        max-height: 1000px;
+        background-color: var(--bg-color);
+        transition: max-height 1.25s ease-out;
+    }
+
+    /* Conteneur secondaire affiché tout en haut et avant le conteneur principale */
+    #side_container {
+        width: 100%;
+    }
+
+    /* Conteneur principal, Sujet du site affiché à la suite du conteneur secondaire */
+    #container {
+        width: 100%;
+    }
+
+    #page_title {
+        font-size: 1rem;
+    }
+}

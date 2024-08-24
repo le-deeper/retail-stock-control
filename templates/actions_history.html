@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}<title>StockManager</title>{% endblock %}
+{% block style_page %}
+    <link rel="stylesheet" href="{% static 'styles/history_style.css' %}">
+{% endblock %}
+{% block content %}
+    <a href="/stock_actions_history/" class="btn">{% trans "Voir que les actions dûes à une vérification de stock" %}</a>
+    <div id="actions">
+        {% if actions %}
+            {% for action in actions %}
+                <div class="action {% if action.categorie == 1 %}action-info {% elif action.categorie == 2 %}action-warning {% else %}action-error {% endif %}">
+                    <p>Action: {{ action.action }}</p>
+                    <p>Date: {{ action.date|date:"l d F Y à f" }}</p>
+                    <p>Gerant: {{ action.gerant.nom }}</p>
+                    {% if action.gerant.site %}<p>Site: {{ action.gerant.site.nom }}</p> {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p id="no-result">{% trans "Aucune actions enregistrées" %}</p>
+        {% endif %}
+    </div>
+
+{% endblock %}
+{% block script_page %}
+    <script src="{% static 'scripts/history_script.js' %}"></script>
+{% endblock %}

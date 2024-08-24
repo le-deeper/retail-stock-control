@@ -1,0 +1,68 @@
+@media (min-width: 1200px) {
+
+    /* On cache le menu burger */
+    #burger {
+        display: none;
+    }
+
+    /* Conteneur globale, en disposition flex */
+    #globale {
+        display: flex;
+    }
+
+    /* Conteneur à gauche et avatar, fixés */
+    #side_container {
+        width: 30%;
+    }
+
+    #avatar_container {
+        position: sticky;
+        top: 4rem;
+    }
+
+    /* Conteneur à droite, Sujet du site */
+    #container {
+        width: 70%;
+    }
+
+    /* Affichage Menu pour les grands écrans */
+
+    /* Le contenu du menu est affiché sur une seul ligne et est centré avec un effet d'ombre */
+    #menu {
+        top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1%;
+        height: 3rem;
+        box-shadow: 2px 0px 2px 0px #333;
+    }
+
+    #menu li {
+        display: inline-block;
+    }
+
+    /*
+    Les sous-menus on la même longueur que les éléments du menu est sont fixés en bas de ces derniers.
+    On créer un effet de deroulement en definissant une transition
+    */
+    #menu ul ul {
+        transition: max-height 0.25s ease-out;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #fff;
+        border-radius: 10px;
+    }
+
+    #menu a {
+        width: 7rem;
+    }
+
+    /* Au survol d'un élément du menu, le sous menu est déroulé avec une bordure arrondie */
+    #menu ul li:hover>ul {
+        transition: max-height 0.5s ease-in;
+        max-height: 1000px;
+        border: 1px solid #ccc;
+    }
+}

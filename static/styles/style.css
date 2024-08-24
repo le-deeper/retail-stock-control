@@ -1,0 +1,530 @@
+/* Variables */
+:root {
+    --bg-color: #caf0f8;
+    --fg-color: #d0f4de;
+    --bg-second-color: #a2d2ff;
+    --dark-color: #333333;
+    --grey-color: #838282;
+    --info-color: #ffc107;
+    --dark: #1c1b1b;
+    --first-btn: #4CAF50;
+    --red-color: #ba212d;
+    --third-btn: #13d5bc;
+    --second-btn: #d5b828;
+    --normal-action: #4bae15;
+}
+
+/* Polices */
+@font-face {
+    font-family: "Title";
+    src: url("../fonts/Agbalumo.ttf");
+}
+
+@font-face {
+    font-family: "Text";
+    src: url("../fonts/JosefinSans.ttf");
+}
+
+/* Réinitialisation */
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Text', sans-serif;
+    scroll-behavior: smooth;
+    scroll-margin-top: 4rem;
+}
+
+a, a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+/* Scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px var(--grey-color);
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--dark-color);
+    border-radius: 10px;
+}
+
+/* Fin Scrollbar */
+
+body {
+    background-color: var(--bg-color);
+}
+
+a {
+    cursor: pointer;
+}
+
+ul {
+    list-style: none;
+    margin-bottom: 0rem;
+}
+
+
+/* DEBUT En-tête de la page (Barre et Menu du site) peu importe le screen */
+
+/* Barre d'en tête, logo et texte centrés */
+header {
+    height: 4rem;
+    padding: 10px;
+    display: flex;
+    background-color: var(--bg-color);
+    align-items: center;
+    justify-content: center;
+}
+
+#page_title {
+    font-weight: initial;
+    font-style: normal;
+    margin-bottom: 0;
+    font-size: 1.2rem;
+}
+
+#blog_image {
+    width: 40px;
+    padding-right: 10px;
+}
+
+/* Menu, fixé peu importé la taille de l'écran */
+#menu {
+    position: sticky;
+    z-index: 1;
+    background-color: var(--bg-color);
+}
+
+#menu li {
+    position: relative;
+}
+
+#menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--dark-color);
+    text-align: center;
+}
+
+#menu ul ul {
+    max-height: 0;
+    overflow: hidden;
+}
+
+#menu ul ul li a {
+    border-radius: 5px;
+}
+
+#menu ul li ul a:hover {
+    display: block;
+    background-color: var(--fg-color);
+}
+
+/* FIN en-tête */
+
+/* Style peu importe l'écran */
+
+/* Style des articles, qui sont arrondis et occupent une partie de la longueur avec un effet d'ombre */
+article {
+    border-radius: 15px;
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    margin-top: 2rem;
+    box-shadow: 5px 2px 2px var(--dark-color);
+    background-color: var(--fg-color);
+}
+
+article p {
+    margin-top: 10px;
+    font-size: 1.5em;
+    text-align: justify;
+}
+
+.info {
+    text-align: center;
+    font-size: 1.2em;
+    color: var(--info-color);
+    width: 100%;
+    padding: 15px;
+}
+
+/* Style des titres des articles */
+.title {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    font-size: 2em;
+    font-family: 'Title', sans-serif;
+}
+
+/* Style de l'avatar, qui est centré et surelevé grâce à un effet d'ombre */
+#avatar {
+    width: 15rem;
+    display: block;
+    margin: auto;
+    margin-top: 2rem;
+    border-radius: 20px;
+    box-shadow: 3px 2px 2px var(--dark);
+}
+
+/* Style des titres d'images */
+.subtitle, figcaption {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* Cartes: Image et description en bas de celle-ci */
+
+.card {
+    margin: 10px;
+    background-color: transparent;
+    border: none;
+    transition: all 1s ease-in-out;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* Effets: Décale le block et affiche une ombre en bas à droite  */
+.card:hover,
+.information:hover {
+    transform: translate(-10px);
+    border: 1px solid var(--grey-color);
+    box-shadow: 3px 3px 1px var(--bg-second-color);
+}
+
+.illustration {
+    margin: auto;
+    display: block;
+    padding: 5px;
+    border-radius: 15px;
+}
+
+/* Image et description sur la même ligne */
+
+.information {
+    display: flex;
+    border-radius: 10px;
+    padding: 10px;
+    transition: all 1s ease-in-out;
+    cursor: pointer;
+}
+
+/* Pour créer un espace au cas où les images n'ont pas la même taille afin que le texte de leur description soit aligné */
+.information div {
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 48px;
+}
+
+.information div img {
+    display: block;
+    height: 48px;
+    margin: auto;
+}
+
+.information .subtitle {
+    display: block;
+    margin-left: 1rem;
+    text-align: left;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+/* Formulaire */
+/* Table */
+.stats {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.stats td {
+    padding: 8px;
+    text-align: center;
+}
+
+/* Affichage Videos  */
+
+.video {
+    border: none;
+    margin-top: 1rem;
+    width: 100%;
+    height: 25rem;
+    border-radius: 10px;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 6rem);
+    background-color: #f1f1f1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    border-radius: 10px;
+    display: none;
+}
+
+#connection-info {
+    text-align: center;
+    font-size: 1.2em;
+    margin: 10px auto;
+    padding: 10px;
+    color: var(--info-color);
+    border-radius: 20px;
+    background-color: #ffffffe6;
+    display: block;
+    width: 50%;
+    max-width: 500px;
+}
+
+.btn {
+    display: block;
+    margin: auto;
+    padding: 8px;
+    border-radius: 15px;
+    width: 30%;
+    min-width: 100px;
+    border: 1px black solid;
+    text-align: center;
+    background-color: var(--first-btn);
+
+}
+
+
+#reponse {
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 20px;
+}
+
+.bouton {
+    display: block;
+    margin: auto;
+    padding: 8px;
+    border-radius: 15px;
+    width: 10%;
+    min-width: 100px;
+    border: 1px black solid;
+}
+
+.result {
+    display: flex;
+    height: 40px;
+    flex-direction: row;
+    align-items: center;
+}
+.result>div{
+    width: 40%;
+}
+
+.result img {
+    height: 40px;
+}
+
+.search-results {
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 5px;
+    border-radius: 10px;
+}
+.search-results div {
+    padding: 5px;
+    cursor: pointer;
+}
+.search-results div:hover {
+    background-color: #f0f0f0;
+}
+
+.hidden {
+    display: none !important;
+}
+.form-container {
+    margin-top: 20px;
+}
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.form-row button {
+    margin: 0px;
+}
+.form-row input, .form-row select,
+.form-row input::file-selector-button,
+.form-row textarea {
+    margin: 5px;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+}
+
+.form-row textarea {
+    width: 80%;
+}
+
+.sep {
+    width: 50%;
+    margin: 10px auto;
+    height: 2px;
+    border-radius: 10px;
+    border: 2px solid dimgrey;
+    background-color: dimgrey;
+}
+
+button {
+    display: block;
+    margin: 10px 5px;
+    padding: 15px 20px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 1rem;
+    box-shadow: 2px 3px 9px 0px #474444;
+}
+
+.first-button {
+    background-color: var(--first-btn);
+}
+
+.red-button {
+    background-color: var(--red-color);
+}
+
+.third-button {
+    background-color: var(--third-btn);
+}
+
+.second-button {
+    background-color: var(--second-btn);
+}
+
+.normal-action {
+    background-color: var(--normal-action);
+}
+
+.buttons-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#error {
+    color: red;
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 20px;
+
+}
+
+.error {
+    background-color: #f1002f8f !important;
+}
+#no-result {
+    text-align: center;
+    font-size: 1.2em;
+    margin-top: 20px;
+    color: var(--info-color);
+}
+
+.chart-container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+}
+
+.loading p {
+    font-size: 1.2em;
+    margin: 5px
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Add this to your CSS file */
+.info-bubble {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #007bff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.expanded-info {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    background-color: white;
+    border: 1px solid #007bff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 6px 4px 10px 9px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.expanded-info #infoText {
+    padding: 10px;
+}
+
+.expanded-info p {
+    font-size: 1.1em;
+    margin: 2px;
+}

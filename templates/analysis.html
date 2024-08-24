@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}<title>StockManager</title>{% endblock %}
+{% block style_page %}
+    <link rel="stylesheet" href="{% static 'styles/analysis_style.css' %}">
+{% endblock %}
+{% block content %}
+    <div id="main-loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
+    <article id="stats">
+        <h2 class="title">{% trans "Statistiques" %}</h2>
+        <div class="buttons-line">
+            <button id="sales-perfs" class="first-button" onclick="display_hide('stats-panel', 'sales-perfs-container')">{% trans "Chiffre d'affaires" %}</button>
+            {% if gerant.est_super_admin %}
+                <button id="revenues-perfs" class="second-button" onclick="display_hide('stats-panel', 'revenue-pers-container')">{% trans "Bénéfice" %}</button>
+            {% endif %}
+        </div>
+        <hr class="sep">
+        <div class="form-container hidden" id="sales-perfs-container">
+            <div class="buttons-line">
+                <button class="normal-action" onclick="setTodayDate('start-date-sales', 'end-date-sales')">Aujourd'hui</button>
+            </div>
+            <div class="form-row">
+                <label for="start-date-sales">{% trans "Date de début" %}</label>
+                <input type="date" id="start-date-sales" name="start-date-revenue">
+                <label for="end-date-sales">{% trans "Date de fin" %}</label>
+                <input type="date" id="end-date-sales" name="end-date-revenue">
+            </div>
+            <div class="buttons-line">
+
+                <button class="normal-action" onclick="fetchSalesPerformance()">{% trans "Valider" %}</button>
+            </div>
+            <div id="results-sales" class="result-data"></div>
+{#            <canvas id="sales-perfs-canvas"></canvas>#}
+
+        </div>
+        {% if gerant.est_super_admin %}
+            <div class="form-container hidden" id="revenue-pers-container">
+                <div class="buttons-line">
+                    <button class="normal-action" onclick="setTodayDate('start-date-revenue', 'end-date-revenue')">Aujourd'hui</button>
+                </div>
+                <div class="form-row">
+                    <label for="start-date-revenue">{% trans "Date de début" %}</label>
+                    <input type="date" id="start-date-revenue" name="start-date-revenue">
+                    <label for="end-date-revenue">{% trans "Date de fin" %}</label>
+                    <input type="date" id="end-date-revenue" name="end-date-revenue">
+                </div>
+
+                <div class="buttons-line">
+
+                    <button class="normal-action" onclick="fetchRentPerformance()">{% trans "Valider" %}</button>
+                </div>
+                <div id="results-rent" class="result-data"></div>
+                {#            <canvas id="sales-perfs-canvas"></canvas>#}
+            </div>
+        {% endif %}
+    </article>
+    <article id="charts">
+        <h2 class="title">{% trans "Graphiques" %}</h2>
+        <div class="buttons-line">
+            <button class="first-button" onclick="display_hide('graphs-panel', 'perfs-charts-container')">{% trans "Chiffre d'affaires" %}</button>
+            <button class="second-button" onclick="display_hide('graphs-panel', 'perfs-per-method-charts-container')">{% trans "Chiffre d'Affaires par méthode" %}</button>
+            {% if gerant.est_super_admin %}
+                <button class="third-button" onclick="display_hide('graphs-panel', 'rents-charts-container')">{% trans "Bénéfices" %}</button>
+            {% endif %}
+        </div>
+        <hr class="sep">
+        <div class="form-container hidden" id="perfs-charts-container">
+            <div class="buttons-line">
+                <button class="normal-action" onclick="setTodayDate('start-date-perfs-charts', 'end-date-perfs-charts')">Aujourd'hui</button>
+            </div>
+            <div class="form-row">
+                <label for="start-date-perfs-charts">{% trans "Date de début" %}</label>
+                <input type="date" id="start-date-perfs-charts" name="start-date-perfs-charts">
+                <label for="end-date-perfs-charts">{% trans "Date de fin" %}</label>
+                <input type="date" id="end-date-perfs-charts" name="end-date-perfs-charts">
+            </div>
+            <div class="form-row">
+                <label for="type-perfs-charts">{% trans "Type de graphique" %}</label>
+                <select id="type-perfs-charts" name="type-perfs-charts">
+                    <option value="line">{% trans "Ligne" %}</option>
+                    <option value="bar">{% trans "Barres" %}</option>
+                    <option value="radar">{% trans "Radar" %}</option>
+                    <option value="pie">{% trans "Camembert" %}</option>
+                    <option value="doughnut">{% trans "Donut" %}</option>
+                </select>
+                <label for="label-perfs-charts">{% trans "Regroupé par: " %}</label>
+                <select id="label-perfs-charts" name="label-perfs-charts">
+                    <option value="day">{% trans "Jour" %}</option>
+                    <option value="month">{% trans "Mois" %}</option>
+                    <option value="year">{% trans "Année" %}</option>
+                </select>
+            </div>
+
+            <div class="buttons-line">
+
+                <button class="normal-action" onclick="fetchSalesPerformanceChart()">{% trans "Valider" %}</button>
+            </div>
+            <canvas id="sales-perfs-canvas"></canvas>
+            {#            <canvas id="sales-perfs-canvas"></canvas>#}
+        </div>
+        {% if gerant.est_super_admin %}
+            <div class="form-container hidden" id="rents-charts-container">
+                <div class="buttons-line">
+                    <button class="normal-action" onclick="setTodayDate('start-date-rents-charts', 'end-date-rents-charts')">Aujourd'hui</button>
+                </div>
+                <div class="form-row">
+                    <label for="start-date-rents-charts">{% trans "Date de début" %}</label>
+                    <input type="date" id="start-date-rents-charts" name="start-date-rents-charts">
+                    <label for="end-date-rents-charts">{% trans "Date de fin" %}</label>
+                    <input type="date" id="end-date-rents-charts" name="end-date-rents-charts">
+                </div>
+                <div class="form-row">
+                    <label for="type-rents-charts">{% trans "Type de graphique" %}</label>
+                    <select id="type-rents-charts" name="type-rents-charts">
+                        <option value="line">{% trans "Ligne" %}</option>
+                        <option value="bar">{% trans "Barres" %}</option>
+                        <option value="radar">{% trans "Radar" %}</option>
+                        <option value="pie">{% trans "Camembert" %}</option>
+                        <option value="doughnut">{% trans "Donut" %}</option>
+                    </select>
+                    <label for="label-rents-charts">{% trans "Regroupé par: " %}</label>
+                    <select id="label-rents-charts" name="label-rents-charts">
+                        <option value="day">{% trans "Jour" %}</option>
+                        <option value="month">{% trans "Mois" %}</option>
+                        <option value="year">{% trans "Année" %}</option>
+                    </select>
+                </div>
+
+                <div class="buttons-line">
+
+                    <button class="normal-action" onclick="fetchRentsPerformanceChart()">{% trans "Valider" %}</button>
+                </div>
+                <canvas id="sales-rents-canvas"></canvas>
+                {#            <canvas id="sales-perfs-canvas"></canvas>#}
+            </div>
+        {% endif %}
+
+        <div class="form-container hidden" id="perfs-per-method-charts-container">
+            <div class="buttons-line">
+                <button class="normal-action" onclick="setTodayDate('start-date-perfs-per-method-charts', 'end-date-perfs-per-method-charts')">Aujourd'hui</button>
+            </div>
+            <div class="form-row">
+                <label for="start-date-perfs-per-method-charts">{% trans "Date de début" %}</label>
+                <input type="date" id="start-date-perfs-per-method-charts" name="start-date-perfs-per-method-charts">
+                <label for="end-date-perfs-per-method-charts">{% trans "Date de fin" %}</label>
+                <input type="date" id="end-date-perfs-per-method-charts" name="end-date-perfs-per-method-charts">
+            </div>
+            <div class="form-row">
+                <label for="type-perfs-per-method-charts">{% trans "Type de graphique" %}</label>
+                <select id="type-perfs-per-method-charts" name="type-perfs-per-method-charts">
+                    <option value="line">{% trans "Ligne" %}</option>
+                    <option value="bar">{% trans "Barres" %}</option>
+                    <option value="radar">{% trans "Radar" %}</option>
+                    <option value="pie">{% trans "Camembert" %}</option>
+                    <option value="doughnut">{% trans "Donut" %}</option>
+                </select>
+            </div>
+
+            <div class="buttons-line">
+
+                <button class="normal-action" onclick="fetchSalesPerMethodPerformanceChart()">{% trans "Valider" %}</button>
+            </div>
+            <canvas id="sales-perfs-per-method-canvas"></canvas>
+            {#            <canvas id="sales-perfs-canvas"></canvas>#}
+        </div>
+        
+    </article>
+
+    <article id="products-stats">
+        <h2 class="title">{% trans "Produits" %}</h2>
+        <div class="buttons-line">
+            <button class="first-button" onclick="display_hide('products-panel', 'products-sales-container')">{% trans "Nombre de produits vendus" %}</button>
+            <button class="second-button" onclick="display_hide('products-panel', 'products-total-container')">{% trans "Total de produits vendus" %}</button>
+            <button class="third-button" onclick="display_hide('products-panel', 'product-total-container')">{% trans "Produit en particulier" %}</button>
+        </div>
+        <hr class="sep">
+        <div class="form-container hidden" id="products-sales-container">
+            <div class="buttons-line">
+                <button class="normal-action" onclick="setTodayDate('start-date-products-sales', 'end-date-products-sales')">Aujourd'hui</button>
+            </div>
+            <div class="form-row">
+                <label for="start-date-products-sales">{% trans "Date de début" %}</label>
+                <input type="date" id="start-date-products-sales" name="start-date-products-sales">
+                <label for="end-date-products-sales">{% trans "Date de fin" %}</label>
+                <input type="date" id="end-date-products-sales" name="end-date-products-sales">
+            </div>
+            <div class="form-row">
+                <label for="type-products-sales">{% trans "Type de graphique" %}</label>
+                <select id="type-products-sales" name="type-products-sales">
+                    <option value="line">{% trans "Ligne" %}</option>
+                    <option value="bar">{% trans "Barres" %}</option>
+                    <option value="radar">{% trans "Radar" %}</option>
+                    <option value="pie">{% trans "Camembert" %}</option>
+                    <option value="doughnut">{% trans "Donut" %}</option>
+                </select>
+            </div>
+
+            <div class="buttons-line">
+
+                <button class="normal-action" onclick="fetchProductsSalesChart()">{% trans "Valider" %}</button>
+            </div>
+            <canvas id="products-sales-canvas"></canvas>
+            {#            <canvas id="sales-perfs-canvas"></canvas>#}
+        </div>
+
+        <div class="form-container hidden" id="products-total-container">
+            <div class="buttons-line">
+                <button class="normal-action" onclick="setTodayDate('start-date-products-total', 'end-date-products-total')">Aujourd'hui</button>
+            </div>
+            <div class="form-row">
+                <label for="start-date-products-total">{% trans "Date de début" %}</label>
+                <input type="date" id="start-date-products-total" name="start-date-products-total">
+                <label for="end-date-products-total">{% trans "Date de fin" %}</label>
+                <input type="date" id="end-date-products-total" name="end-date-products-total">
+            </div>
+            <div class="form-row">
+                <label for="type-products-total">{% trans "Type de graphique" %}</label>
+                <select id="type-products-total" name="type-products-total">
+                    <option value="line">{% trans "Ligne" %}</option>
+                    <option value="bar">{% trans "Barres" %}</option>
+                    <option value="radar">{% trans "Radar" %}</option>
+                    <option value="pie">{% trans "Camembert" %}</option>
+                    <option value="doughnut">{% trans "Donut" %}</option>
+                </select>
+                <label for="label-products-total">{% trans "Regroupé par: " %}</label>
+                <select id="label-products-total" name="label-products-total">
+                    <option value="day">{% trans "Jour" %}</option>
+                    <option value="month">{% trans "Mois" %}</option>
+                    <option value="year">{% trans "Année" %}</option>
+                </select>
+            </div>
+
+            <div class="buttons-line">
+
+                <button class="normal-action" onclick="fetchProductsTotalChart()">{% trans "Valider" %}</button>
+            </div>
+            <canvas id="products-total-canvas"></canvas>
+            {#            <canvas id="sales-perfs-canvas"></canvas>#}
+        </div>
+        <div class="form-container hidden" id="product-total-container">
+            <div class="buttons-line">
+                <button class="normal-action" onclick="setTodayDate('start-date-product-total', 'end-date-product-total')">Aujourd'hui</button>
+            </div>
+            <div class="form-row">
+                <button class="first-button" onclick="scanBarcode(this, searchByBarcode)">{% trans "Scanner Code bar" %}</button>
+                <input type="number" class="product-code hidden" id="product-total-code">
+                <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, 'search-results', false, false)">
+            </div>
+            <div id="search-results" class="search-results hidden"></div>
+            <div class="form-row">
+                <label for="start-date-product-total">{% trans "Date de début" %}</label>
+                <input type="date" id="start-date-product-total" name="start-date-product-total">
+                <label for="end-date-product-total">{% trans "Date de fin" %}</label>
+                <input type="date" id="end-date-product-total" name="end-date-product-total">
+            </div>
+            <div class="form-row">
+                <label for="type-product-total">{% trans "Type de graphique" %}</label>
+                <select id="type-product-total" name="type-product-total">
+                    <option value="line">{% trans "Ligne" %}</option>
+                    <option value="bar">{% trans "Barres" %}</option>
+                    <option value="radar">{% trans "Radar" %}</option>
+                    <option value="pie">{% trans "Camembert" %}</option>
+                    <option value="doughnut">{% trans "Donut" %}</option>
+                </select>
+                <label for="label-product-total">{% trans "Regroupé par: " %}</label>
+                <select id="label-product-total" name="label-product-total">
+                    <option value="day">{% trans "Jour" %}</option>
+                    <option value="month">{% trans "Mois" %}</option>
+                    <option value="year">{% trans "Année" %}</option>
+                </select>
+            </div>
+
+            <div class="buttons-line">
+
+                <button class="normal-action" onclick="fetchProductTotalChart()">{% trans "Valider" %}</button>
+            </div>
+            <canvas id="product-total-canvas"></canvas>
+            {#            <canvas id="sales-perfs-canvas"></canvas>#}
+        </div>
+    </article>
+{% endblock %}
+
+{% block script_page %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'scripts/analysis_script.js' %}"></script>
+{% endblock %}

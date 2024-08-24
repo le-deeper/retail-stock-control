@@ -1,0 +1,91 @@
+.form-row label {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 20px 10px;
+}
+
+#search {
+    width: 30vw;
+}
+
+#search-button {
+    width: 20vw;
+    min-width: 150px;
+}
+
+.command, .supply {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px auto;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+    width: 80%;
+    border-radius: 20px;
+}
+
+.command-info, .supply-info {
+    background-color: #fff;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+}
+
+.command-products {
+    background-color: #f7f7f7;
+    padding: 10px;
+}
+
+.command-info p,
+.command-products p,
+.supply-info p,
+.supplied-product{
+    font-size: 1em;
+    margin: 5px 0;
+}
+
+.command-date,
+.command-paiement,
+.command-total,
+.command-gerant,
+.command-client,
+.supply-date,
+.supply-gerant {
+    font-weight: bold;
+}
+
+.command-product {
+    font-style: italic;
+}
+
+.action {
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 15px;
+    margin: 10px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    width: 80vw;
+}
+
+.action:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.action p {
+    font-size: 1em;
+    margin: 5px 0;
+}
+
+.action-info {
+
+    background-color: var(--info-color)
+}
+
+.action-warning {
+    background-color: chocolate;
+
+}
+.action-error {
+    background-color: var(--red-color);
+}

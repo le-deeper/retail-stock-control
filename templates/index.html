@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}<title>StockManager</title>{% endblock %}
+{% block style_page %}
+    <link rel="stylesheet" href="{% static 'styles/index_style.css' %}">
+{% endblock %}
+{% block content %}
+    <div id="main-loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
+    {% if not gerant.est_super_admin %}
+        <article id="#command-actions">
+            <h2 class="title">{% trans "Commandes" %}</h2>
+            <div class="buttons-line">
+                <button id="new-order-btn" class="first-button" onclick="display_hide('command-actions', 'new-command-btns',
+                'new-command', 'command-total', 'paiement-container', 'command-comment-container')">{% trans "Nouvelle commande" %}</button>
+            </div>
+            <hr class="sep">
+            <div id="new-command" class="hidden">
+                <div class="form-container product-command">
+                    <div class="form-row">
+                        <button class="first-button" onclick="scanBarcode(this, searchByBarcode)">{% trans "Scanner Code bar" %}</button>
+                        <input type="number" class="product-code hidden">
+                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this)">
+                        <input type="number" class="quantity" placeholder="{% trans 'Quantité' %}" oninput="calcul_total()">
+                        <input type="number" class="price" placeholder="{% trans 'Prix de vente' %}" oninput="calcul_total()">
+                        <label><input type="checkbox" class="isGift" oninput="calcul_total()">{% trans "Cadeau" %}</label>
+                    </div>
+                    <div id="search-results" class="search-results hidden"></div>
+                </div>
+            </div>
+            <div class="form-row hidden" id="paiement-container">
+                <input type="text" id="client-name" placeholder="{% trans 'Nom du client' %}">
+                <select id="paiement">
+                    <<option value="">{% trans 'Sélectionner une méthode de paiement' %}</option>
+                    {% for paiement in paiements %}
+                        <option value="{{ paiement.id_paiement }}">{{ paiement.nom }}</option>
+                    {% endfor %}
+                </select>
+                <label><input id="isBuyingLater" type="checkbox">{% trans "Le client paye plus tard" %}</label>
+            </div>
+            <div class="form-row hidden" id="command-comment-container">
+                <textarea id="command-comment" placeholder="{% trans 'Commentaire' %}"></textarea>
+            </div>
+            <div id="command-total" class="hidden">Total: 0 {{ settings.currency }}</div>
+            <div class="buttons-line hidden" id="new-command-btns">
+                <button id="add-order-btn" class="second-button" onclick="add_new_product()">{% trans "Ajouter" %}</button>
+                <button id="save-order-btn" onclick="sendOrder(this.parentElement.parentElement)" class="normal-action">{% trans "Enregistrer" %}</button>
+            </div>
+        </article>
+    {% endif %}
+
+    <article id="products-actions">
+        <h2 class="title">{% trans "Produits" %}</h2>
+        <div class="buttons-line">
+            {% if gerant.est_super_admin or gerant.est_admin %}
+                <button class="first-button" onclick="display_hide('products-actions', 'new-product')">{% trans "Nouveau produit" %}</button>
+            {% endif %}
+            <button class="second-button" onclick="display_hide('products-actions', 'supply-product')">{% trans "Approvisionner produit" %}</button>
+            {% if gerant.est_admin or gerant.est_super_admin %}
+                <button class="third-button" onclick="display_hide('products-actions', 'change-price-product')">{% trans "Changer prix produit" %}</button>
+            {% endif %}
+            {% if gerant.est_super_admin %}
+                <button class="red-button" onclick="display_hide('products-actions', 'delete-product')">{% trans "Supprimer produit" %}</button>
+            {% endif %}
+            <button class="normal-action" onclick="display_hide('products-actions', 'change-product-barcode')">Changer Code Barre Produit</button>
+        </div>
+        <hr class="sep">
+        {% if gerant.est_super_admin or gerant.est_admin %}
+            <div id="new-product" class="form-container hidden">
+                <div class="form-row">
+                    <input type="text" id="product-name" placeholder="{% trans 'Nom du produit' %}">
+                    <select id="product-category">
+                        <<option value="">{% trans "Sélectionner une catégorie" %}</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id_categ }}">{{ category.nom }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" placeholder="{% trans 'Code bar du produit (falcultatif)' %}" id="product-barcode">
+                </div>
+                <div class="form-row">
+                    <input type="number" class="product-warning-quantity" placeholder="{% trans "Quantité d'urgence" %}" id="new-product-warning-qty">
+                    <input type="number" class="product-price" placeholder="{% trans 'Prix de vente' %}" id="new-product-price">
+                </div>
+                <div class="form-row">
+                    <input type="file" id="product-image" placeholder="{% trans 'Choisir une image' %}">
+                    <input type="text" id="product-image-url" placeholder="{% trans "URL de l'image" %}">
+                </div>
+                <div class="buttons-line">
+                    <button id="save-product-btn" class="normal-action" onclick="saveNewProduct()">{% trans "Enregistrer" %}</button>
+                </div>
+            </div>
+        {% endif %}
+        <div id="supply-product" class="hidden">
+
+            <div class="form-container">
+                <div class="form-row">
+                    <button class="first-button" onclick="scanBarcode(this, searchByBarcode)">{% trans "Scanner Code bar" %}</button>
+                    <input type="number" class="product-code hidden" id="supply-product-id">
+                    <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this)">
+                </div>
+                <div class="form-row">
+                    <input type="number" class="quantity" placeholder="{% trans 'Quantité' %}" id="supply-product-qty">
+                    <input type="number" class="price" placeholder="{% trans "Prix d'achat" %}" id="supply-product-price">
+                    <input type="text" class="four" placeholder='{% trans "Fournisseur" %}' id="supply-product-four">
+
+                </div>
+                <div class="form-row">
+                    <label><input id="supply-product-change-price" type="checkbox" checked>{% trans "Changer le prix d'achat" %}</label>
+                    <label><input id="supply-product-buy-later" type="checkbox">{% trans "Acheter plus tard" %}</label>
+                </div>
+                <div id="search-results" class="search-results hidden"></div>
+            </div>
+            <div class="buttons-line">
+                <button id="supply-product-btn" class="second-button" onclick="supplyProduct()">{% trans "Approvisionner" %}</button>
+            </div>
+        </div>
+        {% if gerant.est_super_admin or gerant.est_admin %}
+            <div id="change-price-product" class="hidden">
+
+                <div class="form-container">
+                    <div class="form-row">
+                        <button class="first-button" onclick="scanBarcode(this, searchByBarcode)">{% trans "Scanner Code bar" %}</button>
+                        <input type="number" class="product-code hidden" id="change-product-price-id">
+                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, true, false)">
+                    </div>
+                    <div class="form-row">
+                        <input type="number" class="price" placeholder="{% trans 'Prix de vente' %}" id="change-product-price-price">
+                    </div>
+                    <div id="search-results" class="search-results hidden"></div>
+                </div>
+                <div class="buttons-line">
+                    <button id="modify-product-btn" class="red-button" onclick="changeProductPrice()">{% trans "Modifier" %}</button>
+                </div>
+            </div>
+        {% endif %}
+        {% if gerant.est_super_admin %}
+            <div id="delete-product" class="hidden">
+
+                <div class="form-container">
+                    <div class="form-row">
+                        <input type="number" class="product-code hidden" id="delete-product-id">
+                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, true, false)">
+                    </div>
+                    <div id="search-results" class="search-results hidden"></div>
+                </div>
+                <div class="buttons-line">
+                    <button id="delete-product-btn" class="red-button" onclick="deleteProduct()">{% trans "Supprimer" %}</button>
+                </div>
+
+            </div>
+        {% endif %}
+        <div id="change-product-barcode" class="hidden">
+
+            <div class="form-container">
+                <div class="form-row">
+                    <input type="number" class="product-code hidden" id="change-product-barcode-code">
+                    <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}"
+                           oninput="search(this, 'product-barcode-change-search-results', true, false)">
+                </div>
+                <div id="product-barcode-change-search-results" class="search-results hidden"></div>
+                <div class="form-row">
+                    <button class="first-button"
+                            onclick="scanBarcode(this.parentElement, setProductChangeBarcodeValue)">
+                        {% trans "Scanner Code bar" %}</button>
+                    <input type="text" id="change-product-barcode-barcode" placeholder="Code barre">
+                </div>
+            </div>
+            <div class="buttons-line">
+                <button id="change-product-barcode-btn" class="red-button" onclick="changerProductBarcode()">Changer</button>
+            </div>
+
+        </div>
+    </article>
+    {% if gerant.est_super_admin or gerant.est_admin %}
+        <article id="categories-actions">
+            <h2 class="title">{% trans "Categories" %}</h2>
+            <div class="buttons-line">
+                <button class="first-button" onclick="display_hide('categories-actions', 'new-category')">{% trans "Ajouter une catégorie" %}</button>
+                {% if gerant.est_super_admin %}
+                    <button class="red-button" onclick="display_hide('categories-actions', 'delete-category')">{% trans "Supprimer une catégorie" %}</button>
+                {% endif %}
+            </div>
+            <hr class="sep">
+            <div id="new-category" class="form-container hidden">
+                <div class="form-row">
+                    <input type="number" class="category-code hidden" id="new-category-id">
+                    <input type="text" placeholder="{% trans 'Nom de la categorie' %}">
+                </div>
+                <div class="buttons-line">
+                    <button id="save-category-btn" class="normal-action" onclick="addCategory()">{% trans "Enregistrer" %}</button>
+                </div>
+            </div>
+            {% if gerant.est_super_admin %}
+                <div id="delete-category" class="form-container hidden">
+                    <div class="form-row">
+                        <select id="category-name">
+                            {% for category in categories %}
+                                <option value="{{ category.id_categ }}">{{ category.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="buttons-line">
+                        <button id="delete-category-btn" class="red-button" onclick="deleteCategory()">{% trans "Supprimer" %}</button>
+                    </div>
+                </div>
+            {% endif %}
+        </article>
+    {% endif %}
+    {% if gerant.est_super_admin %}
+        <article id="admin-actions">
+            <h2 class="title">{% trans "Administration" %}</h2>
+            <div class="buttons-line">
+                <button class="first-button" onclick="display_hide('admin-actions', 'new-gerant')">{% trans "Ajouter un administrateur" %}</button>
+                <button class="second-button" onclick="display_hide('admin-actions', 'promote-gerant')">{% trans "Promouvoir un administrateur" %}</button>
+                <button class="third-button" onclick="display_hide('admin-actions', 'demote-gerant')">{% trans "Retrograder un administrateur" %}</button>
+                <button class="red-button" onclick="display_hide('admin-actions', 'delete-gerant')">{% trans "Supprimer un administrateur" %}</button>
+                <button class="normal-action" onclick="display_hide('admin-actions', 'add-site')">{% trans "Ajouter un site" %}</button>
+            </div>
+            <hr class="sep">
+            <div id="new-gerant" class="form-container hidden">
+                <div class="form-row">
+                    <input type="text" placeholder="Nom du gérant" id="new-gerant-name">
+                    <input type="password" placeholder="Mdp du gérant" id="new-gerant-pwd">
+                </div>
+                <div class="form-row">
+                    <select id="new-gerant-site">
+                        {% for site in sites %}
+                            <option value="{{ site.nom }}">{{ site.nom }}</option>
+                        {% endfor %}
+                    </select>
+                    <label><input type="checkbox" id="isAdmin">{% trans "Ce gérant doit être admin" %}</label>
+                </div>
+
+                <div class="buttons-line">
+                    <button id="new-gerant-btn" class="normal-action" onclick="addGerant()">{% trans "Ajouter" %}</button>
+                </div>
+            </div>
+            <div id="promote-gerant" class="form-container hidden">
+                <div class="form-row">
+                    <select id="promote-gerant-selection">
+                        {% for gerant in gerants %}
+                            {% if not gerant.est_admin%}
+                                <option value="{{ gerant.gerant }}">{{ gerant.nom }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="buttons-line">
+                    <button id="promote-gerant-btn" class="second-button" onclick="promoteGerant()">{% trans "Promouvoir" %}</button>
+                </div>
+            </div>
+            <div id="demote-gerant" class="form-container hidden">
+                <div class="form-row">
+                    <select id="demote-gerant-selection">
+                        {% for gerant in gerants %}
+                            {% if gerant.est_admin%}
+                                <option value="{{ gerant.gerant }}">{{ gerant.nom }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="buttons-line">
+                    <button id="demote-gerant-btn" class="second-button" onclick="demoteGerant()">{% trans "Releguer gérant" %}</button>
+                </div>
+            </div>
+            <div id="delete-gerant" class="form-container hidden">
+                <div class="form-row">
+                    <select id="delete-gerant-selection">
+                        {% for gerant in gerants %}
+                            <option value="{{ gerant.gerant }}">{{ gerant.nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="buttons-line">
+                    <button id="delete-gerant-btn" class="red-button" onclick="deleteGerant()">{% trans "Supprimer" %}</button>
+                </div>
+            </div>
+            <div id="add-site" class="form-container hidden">
+                <div class="form-row">
+                    <input type="text" placeholder="Nom du site" id="new-site-name">
+                </div>
+
+                <div class="buttons-line">
+                    <button id="add-site-btn" class="normal-action" onclick="addSite()">{% trans "Ajouter" %}</button>
+                </div>
+            </div>
+        </article>
+    {% endif %}
+
+
+{% endblock %}
+
+{% block script_page %}
+    <script src="{% static 'scripts/index_script.js' %}"></script>
+{% endblock %}

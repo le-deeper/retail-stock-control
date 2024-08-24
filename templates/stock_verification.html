@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}<title>StockManager</title>{% endblock %}
+{% block style_page %}
+    <link rel="stylesheet" href="{% static 'styles/stock_verification_style.css' %}">
+{% endblock %}
+{% block content %}
+    <article>
+        <h2 class="title">
+            Dernières vérifications
+        </h2>
+        <div class="last-verifications">
+            {% for verification in last_verifications %}
+                <div class="last-verification{% if verification.erreur %} error{% endif %}">
+                    <p class="last-verification-date">{% trans "Date:" %} {{ verification.date_verif|date:"l d F Y G:i" }}</p>
+                    <p class="last-verification-gerant">{% trans "Validé par:" %} {{ verification.gerant.nom }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </article>
+    <div>
+        <div class="buttons-line">
+            <button class="normal-action" onclick="startButtonAction(this)">{% trans "Démarrer une verification" %}</button>
+        </div>
+        <div class="product-list">
+            {% for product in products %}
+                <div class="product hidden">
+                    <div class="detail">
+                        <input type="hidden" class="product-id" value="{{ product.code }}">
+                        <p class="product-name">{{ product.nom }}</p>
+                        <p class="product-qte">{{ product.qte }} unités</p>
+                        <p class="product-price">{{ product.prix }} {{ settings.currency }}</p>
+                    </div>
+                    <div class="form-container">
+                        <div class="form-row">
+                            <label>{% trans "Quantité en stock:" %} <input type="number" name="stock-qty" class="stock-qty"></label>
+                        </div>
+
+                    </div>
+                    <div class="buttons-line">
+                        <button class="red-button" onclick="signalProduct(this.parentElement.parentElement)">{% trans "Signaler la quantité manquante" %}</button>
+                        <button class="normal-action" onclick="showNextProduct()">Correct</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="buttons-line">
+            <button class="normal-action hidden" id="finish-verification-btn" onclick="sendVerification()">{% trans "Terminer" %}</button>
+        </div>
+    </div>
+{% endblock %}
+{% block script_page %}
+    <script src="{% static 'scripts/stock_verification_script.js' %}"></script>
+{% endblock %}

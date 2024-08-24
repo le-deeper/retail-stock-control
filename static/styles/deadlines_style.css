@@ -1,0 +1,13 @@
+.deadline {
+    width: 80%;
+    margin: 10px auto;
+    text-align: center;
+    background-color: var(--bg-second-color);
+    border-radius: 25px;
+    padding: 15px;
+}
+
+.situation {
+    font-size: 1.1em;
+    color: red;
+}

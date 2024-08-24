@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .receipt-container {
+            margin: auto;
+            padding: 20px;
+        }
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .receipt-header h1 {
+            margin: 0;
+        }
+        .receipt-details {
+            margin-bottom: 20px;
+        }
+        .receipt-details p {
+            margin: 5px 0;
+        }
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .receipt-table th, .receipt-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .receipt-table th {
+            background-color: #f2f2f2;
+        }
+        .receipt-total {
+            text-align: right;
+            font-weight: bold;
+        }
+        #comment {
+            margin-top: 20px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="receipt-container">
+    <div class="receipt-header">
+        <h1>Facture Client</h1>
+    </div>
+    <div class="receipt-details">
+        <p><strong>Numéro commande:</strong> {{ commande.id }}</p>
+        <p><strong>Validé par:</strong> {{ commande.gerant }}</p>
+        <p><strong>Client:</strong> {% if command.client %}{{ commande.client.nom }}{% else %}Inconnu {% endif %}</p>
+        <p><strong>Date:</strong> {{ commande.formated_date }}</p>
+        <p><strong>Site: </strong>{{ commande.site }}</p>
+        {% if settings.phone_number %}<p><strong>Numéro de Téléphone: </strong>{{ settings.phone_number }}</p>{% endif %}
+    </div>
+    <table class="receipt-table">
+        <thead>
+        <tr>
+            <th>Produit</th>
+            <th>P.U.</th>
+            <th>Qte</th>
+            <th>P.T.</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in commande.products %}
+            <tr>
+                <td>{{ product.prod.nom }}</td>
+                <td>{{ product.prix }} {{ settings.currency }}</td>
+                <td>{{ product.qte }}</td>
+                <td>{% widthratio product.prix 1 product.qte %} {{ settings.currency }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="receipt-total">
+        <p>Total: {{ commande.total }}</p>
+    </div>
+    <div id="comment">
+        {% if commande.comment %}
+            Commentaire: {{ commande.comment }}
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

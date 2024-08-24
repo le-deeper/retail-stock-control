@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}<title>StockManager</title>{% endblock %}
+{% block style_page %}
+    <link rel="stylesheet" href="{% static 'styles/history_style.css' %}">
+{% endblock %}
+{% block content %}
+    <form action="/order_history/" method="post">
+        {% csrf_token %}
+        <div class="form-container">
+            <div class="form-row">
+                <input name="query" type="text" id="search" placeholder="Rechercher une commande" {% if query %} value="{{ query }}" {% endif %}>
+            </div>
+            <div class="form-row">
+                <label><input name="by_client" type="checkbox" id="search-by-client-name" {% if by_client %} checked {% endif %}>{% trans "Nom Client" %}</label>
+                <label><input name="by_date" type="checkbox" id="search-by-date" {% if by_date %} checked {% endif %}>{% trans "Date" %}</label>
+                <label><input name="by_method" type="checkbox" id="search-by-method" {% if by_method %} checked {% endif %}>{% trans "Paiement" %}</label>
+                <label><input name="by_total" type="checkbox" id="search-by-total" {% if by_total %} checked {% endif %}>{% trans "Total à 50 près" %}</label>
+                <label><input name="by_products" type="checkbox" id="search-by-products" {% if by_products %} checked {% endif %}>{% trans "Produits" %}</label>
+                <label><input name="by_gerant" type="checkbox" id="search-by-gerant" {% if by_gerant %} checked {% endif %}>{% trans "Gerant" %}</label>
+            </div>
+            <div class="buttons-line">
+                <button class="normal-action" id="search-button" onclick="">{% trans "Rechercher" %}</button>
+            </div>
+        </div>
+    </form>
+
+    <div id="result">
+        {% if commands %}
+            {% for command in commands %}
+                <div class="command">
+                    <input type="hidden" class="command-id" value="{{ command.id }}">
+                    <div class="command-info">
+                        <p class="command-client">Client: {{ command.client }}</p>
+                        <p class="command-date">Date: {{ command.formated_date }}</p>
+                        <p class="command-paiement">Paiement: {{ command.paiement }}</p>
+                        <p class="command-total">Total: {{ command.total }} {{ settings.currency }}</p>
+                        <p class="command-gerant">Validé Par: {{ command.gerant }}</p>
+                        <p class="command-gerant">Site: {{ command.site }}</p>
+                    </div>
+                    <div class="command-products">
+                        {% for product in command.products %}
+                            <p class="command-product">
+                                {{ product.qte }} unités de {{ product.prod.nom }} vendu à  {{ product.prix }} {{ settings.currency }}</p>
+                        {% endfor %}
+                    </div>
+                    <div class="buttons-line">
+                        <button class="normal-action"
+                                onclick="downloadOrder({{ command.id }})">
+                            {% trans "Télécharger Reçu" %}
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% elif error %}
+            <p id="error">{{ error }}</p>
+        {% else %}
+            <p id="no-result">{% trans "Aucune commande trouvée" %}</p>
+        {% endif %}
+    </div>
+
+    <!-- Add this inside your HTML file where you want the button and info bubble -->
+    <img id="infoBubble" class="info-bubble" src="{% static 'info.png' %}">
+    <div id="expandedInfo" class="expanded-info">
+        <h2 class="title">{% trans "Comment rechercher" %}</h2>
+        <div id="infoText">
+            <p>{% trans "Rechercher en utilisant des critères séparés par des tires (critère1-valeur , critère2-valeur)" %}</p>
+            <p>{% trans "Rechercher avec le nom d'un client -> client-nom du client" %}</p>
+            <p>{% trans "Rechercher avec le paiement -> paiement-nom du paiement" %}</p>
+            <p>{% trans "Rechercher avec le total -> total-nombre" %}</p>
+            <p>{% trans "Rechercher avec le nom d'un produit -> produit-nom du produit" %}</p>
+            <p>{% trans "Rechercher avec le nom d'un gerant -> gerant-nom du gerant" %}</p>
+            <p>{% trans "Rechercher avec la date -> jj/mm/aaaa ou jj/mm/aaaa ou jj/mm/aaaa hh: ou jj/mm/aaaa hh:mm" %}</p>
+            <p>{% trans "Exemple: client-mourad , date-12/01/2024 13:" %}</p>
+            <p>{% trans "Exemple: gerant-ousmane , date-12/01/2022 19-23" %}</p>
+            <p>{% trans "Exemple: paiement-bankily , 12/01/2022 , total-1200" %}</p>
+            
+        </div>
+        <div class="buttons-line">
+            <button class="normal-action" onclick="() => this.parentElement.parentElement.classList.add('hidden')">{% trans "Fermer" %}</button>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script_page %}
+    <script src="{% static 'scripts/history_script.js' %}"></script>
+{% endblock %}

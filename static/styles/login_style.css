@@ -1,0 +1,10 @@
+#login-form {
+    margin: auto;
+    margin-top: 30vh;
+    width: 40vw;
+    transform: translate(0, -50%);
+}
+
+.form-row input {
+    width: 60%;
+}

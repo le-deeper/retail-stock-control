@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}<title>StockManager</title>{% endblock %}
+{% block style_page %}
+    <link rel="stylesheet" href="{% static 'styles/history_style.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/deadlines_style.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/history_style.css' %}">
+{% endblock %}
+{% block content %}
+    <div id="deadlines">
+        {% if deadlines_providers %}
+            {% for deadline in deadlines_providers %}
+                <div class="deadline">
+                    <div class="deadline-info">
+                        <input type="number" class="hidden id_echeance" value="{{ deadline.id_echeance }}">
+                        {% if deadline.date_echeance %}
+                            <div class="deadline-date">Date d'échéance: {{ deadline.date_echeance }}</div>
+                        {% endif %}
+                        <div class="situation">
+                            <strong>Evolution: </strong>{{ deadline.parti_payee }} / {{ deadline.total }}
+                            {{ settings.currency }}
+                        </div>
+                    </div>
+
+                    <div class="supply">
+                        {% with deadline.approvisionnement as supply %}
+                            <input type="hidden" class="supply-id" value="{{ supply.id_appro }}">
+                            <div class="supply-info">
+                                <p class="supply-date">Date: {{ supply.date_achat|date:"l d F Y f" }}</p>
+                                <p class="supply-gerant">Validé Par: {% if supply.gerant %} {{ supply.gerant.nom }} {% else %} Inconnu {% endif %}</p>
+                                {% if supply.gerant and supply.gerant.site %}<p class="supply-gerant">Site:  {{ supply.gerant.site.nom }}</p>{% endif %}
+                                <p class="supply-gerant">Fourni par: {% if supply.four %} {{ supply.four }} {% else %} Inconnu {% endif %}</p>
+                            </div>
+                            <div class="supplied-product">
+                                {{ supply.qte }} unités de {{ supply.prod.nom }} ({{ supply.prod.id_prod }}) acheté à {{ supply.prix_achat }}
+                                {{ settings.currency }}
+                            </div>
+                        {% endwith %}
+                    </div>
+                    <div class="form-row">
+                        <input type="number" placeholder="{% trans "Indiquer la somme à ajouter" %}" class="part-to-add">
+                        <button class="normal-action" onclick="sendDeadline(this.parentElement.parentElement)">{% trans "Ajouter" %}</button>
+                    </div>
+                    <div class="buttons-line">
+                        <button class="normal-action" onclick="sendDeadline(this.parentElement.parentElement, true)">{% trans "Terminer l'échéance" %}</button>
+                    </div>
+
+                </div>
+            {% endfor %}
+        {% elif deadlines_clients %}
+            {% for deadline in deadlines_clients %}
+                <div class="deadline">
+                    <div class="deadline-info">
+                        <input type="number" class="hidden id_echeance" value="{{ deadline.id_echeance }}">
+                        {% if deadline.date_echeance %}
+                            <div class="deadline-date">Date d'échéance: {{ deadline.date_echeance }}</div>
+                        {% endif %}
+                        <div class="situation">
+                            <strong>Evolution: </strong>{{ deadline.parti_payee }} / {{ deadline.total }}
+                            {{ settings.currency }}
+                        </div>
+                    </div>
+
+                        {% with deadline.commande as command %}
+                            <div class="command">
+                                <input type="hidden" class="command-id" value="{{ command.id }}">
+                                <div class="command-info">
+                                    <p class="command-client">Client: {{ command.client }}</p>
+                                    <p class="command-date">Date: {{ command.date }}</p>
+                                    <p class="command-paiement">Paiement: {{ command.paiement }}</p>
+                                    <p class="command-gerant">Validé Par: {{ command.gerant.nom }}</p>
+                                    {% if command.gerant.site %}<p class="command-gerant">Site:  {{ command.gerant.site.nom }}</p>{% endif %}
+                                </div>
+                            </div>
+                        {% endwith %}
+                    <div class="form-row">
+                        <input type="number" placeholder="{% trans "Indiquer la somme à ajouter" %}" class="part-to-add">
+                        <button class="normal-action" onclick="sendDeadline(this.parentElement.parentElement)">{% trans "Ajouter" %}</button>
+                    </div>
+                    <div class="buttons-line">
+                        <button class="normal-action" onclick="sendDeadline(this.parentElement.parentElement, true)">{% trans "Terminer l'échéance" %}</button>
+                    </div>
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="info">{% trans "Aucune échéance" %}</div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block script_page %}
+    <script src="{% static 'scripts/deadlines_script.js' %}"></script>
+{% endblock %}

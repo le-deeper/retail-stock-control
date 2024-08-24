@@ -1,0 +1,9 @@
+.result-data {
+    margin: 5px;
+    padding: 15px;
+    font-size: 1.5em;
+    border-radius: 10px;
+    border: none;
+    color: red;
+    text-align: center;
+}
