@@ -25,7 +25,10 @@
             </div>
         </div>
     </form>
-
+    <div id="main-loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+    </div>
     <div id="result">
         {% if commands %}
             {% for command in commands %}
@@ -41,8 +44,12 @@
                     </div>
                     <div class="command-products">
                         {% for product in command.products %}
-                            <p class="command-product">
-                                {{ product.qte }} unités de {{ product.prod.nom }} vendu à  {{ product.prix }} {{ settings.currency }}</p>
+                            <div class="command-product">
+                                <input type="hidden" class="product-id" value="{{ product.prod.id_prod }}">
+                                <input type="number" class="hidden set-product-qty set-input" value="{{ product.qte }}">
+                                <span class="readonly-qty">{{ product.qte }}</span> unités de {{ product.prod.nom }} vendu à
+                                <span class="readonly-price">{{ product.prix }}</span>
+                                <input type="number" class="hidden set-product-price set-input" value="{{ product.prix|floatformat }}"> {{ settings.currency }}</div>
                         {% endfor %}
                     </div>
                     <div class="buttons-line">
@@ -50,6 +57,18 @@
                                 onclick="downloadOrder({{ command.id }})">
                             {% trans "Télécharger Reçu" %}
                         </button>
+                        {% if gerant.est_admin or gerant.est_super_admin %}
+                            <button class="red-button edit-order"
+                                    onclick="editOrder(this.parentElement.parentElement)">
+                                Modifier
+                            </button>
+                            <button class="second-button hidden cancel-edits" onclick="cancelModifications(this.parentElement.parentElement)">
+                                Annuler
+                            </button>
+                            <button class="third-button hidden save-edits" onclick="saveModifications(this.parentElement.parentElement)">
+                                Enregistrer
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

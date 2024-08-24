@@ -45,8 +45,11 @@ def send_message_to_admin(message):
     :param message: Le message à envoyer
     """
     # Récupérer les paramètres de l'application
-    bot_token = Parametre.get_value(Parametre.BOT_TOKEN).valeur
-    chat_id = Parametre.get_value(Parametre.CHAT_ID).valeur
+    bot_token = Parametre.get_value(Parametre.BOT_TOKEN)
+    chat_id = Parametre.get_value(Parametre.CHAT_ID)
+
+    if bot_token is None or chat_id is None:
+        return
 
     # Envoyer le message
-    send_message(bot_token, chat_id, message)
+    send_message(bot_token.valeur, chat_id.valeur, message)

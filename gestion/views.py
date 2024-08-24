@@ -89,6 +89,11 @@ def search(request, gerant):
     s = request.GET.get('q')
     qty = int(request.GET.get('qty', True))
     eco_mode = Parametre.get_value(Parametre.ECO_MODE)
+    if eco_mode:
+        try:
+            eco_mode = int(eco_mode)
+        except ValueError:
+            eco_mode = 0
     if qty:
         site = get_manager_site(gerant, request)
         if not site:
@@ -193,6 +198,69 @@ def submit_order(request, gerant):
         return JsonResponse({'status': 'success', 'message': _('Commande enregistrée') + "." + warning_msg}, status=201)
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': _(INVALID_JSON)}, status=400)
+
+
+@unique_method('POST')
+@logged_in()
+def edit_order(request, gerant):
+    try:
+        site = get_manager_site(gerant, request)
+        data = json.loads(request.body)
+        products = data.get('products', [])
+        order = data.get('order', None)
+        warning_stock = False
+        if not order:
+            return JsonResponse({'status': 'error', 'message': 'Commande non reconnue'}, status=200)
+        if not products:
+            return JsonResponse({'status': 'error', 'message': 'Aucun produit à modifier'}, status=200)
+        command_total = search_engine(CommandeTotale, 'id_commande', order)
+        if not command_total:
+            return JsonResponse({'status': 'error', 'message': 'Commande non reconnue'}, status=200)
+        command_total = command_total[0]
+
+        # Process each product
+        for product in products:
+            product_code = product.get('productCode')
+            quantity = int(product.get('quantity'))
+            price = float(product.get('price'))
+            prod = search_engine(Produit, 'id_prod', product_code)[0]
+            prod: Produit
+            if prod.prix_vente > price:
+                action = Action(categorie=Action.WARNING,
+                                action=f"A vendu le produit {prod.nom} "
+                                       f"avec un prix inférieux à celui conseillé (Vendu à {price} "
+                                       f"contre {prod.prix_vente} conseillé)",
+                                gerant=gerant)
+                action.save()
+                send_message_to_admin(TELEGRAM_FORMAT.format(title=action.gerant.nom, description=action.action,
+                                                             date=action.date.strftime('%d/%m/%Y à %H:%M')))
+            product_command = CommandeProduit.objects.filter(prod=prod, commande=command_total).get()
+            product_command.prix = price
+            stock = Stock.objects.filter(prod=prod, site=site).get()
+            stock.qte += product_command.qte
+            if stock.qte < quantity:
+                stock.qte -= product_command.qte
+                return JsonResponse({'status': 'error', 'message': _('Quantité supérieur à celle possédé') +
+                                                                   f"pour le produit {product_command.prod.nom}"},
+                                    status=200)
+            else:
+                stock.qte -= quantity
+                product_command.qte = quantity
+            if prod.stock_urgence > stock.qte:
+                action = Action(categorie=Action.WARNING,
+                                action=f"Le stock du produit {prod.nom} est en dessous du seuil d'urgence (stock: {stock.qte})",
+                                gerant=gerant)
+                action.save()
+                send_message_to_admin(TELEGRAM_FORMAT.format(title=action.gerant.nom, description=action.action,
+                                                             date=action.date.strftime('%d/%m/%Y à %H:%M')))
+
+            stock.save()
+            product_command.save()
+        warning_msg = "" if not warning_stock else "Attention, certains produits sont en dessous du seuil d'urgence"
+        return JsonResponse({'status': 'success', 'message': "Commande modifiée" + "." + warning_msg}, status=201)
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': _(INVALID_JSON)}, status=400)
+
 
 
 @unique_method('POST')

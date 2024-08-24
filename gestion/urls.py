@@ -11,6 +11,7 @@ urlpatterns = [
     path("search/", search, name="search"),
     path("search_barcode/", search_barcode, name="search_barcode"),
     path('submit/', submit_order, name='submit'),
+    path('edit_order/', edit_order, name='edit_order'),
     path('login/', go_to_login, name='login'),
     path('add_product/', add_product, name='add_product'),
     path('supply_product/', supply_product, name='supply_product'),
