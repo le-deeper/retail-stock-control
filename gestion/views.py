@@ -91,7 +91,7 @@ def search(request, gerant):
     eco_mode = Parametre.get_value(Parametre.ECO_MODE)
     if eco_mode:
         try:
-            eco_mode = int(eco_mode)
+            eco_mode = int(eco_mode.valeur)
         except ValueError:
             eco_mode = 0
     if qty:
