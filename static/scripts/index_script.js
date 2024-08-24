@@ -242,17 +242,15 @@ async function deleteProduct() {
 
 async function addCategory() {
     display_hide("loading", "main-loading")
-    const categoryId = document.getElementById('new-category-id').value;
-    const categoryName = document.querySelector('#new-category input[type="text"]').value;
+    const categoryName = document.getElementById('new-category-name').value;
 
-    if (!categoryId || !categoryName) {
+    if (!categoryName) {
         display_hide("loading", "main-loading")
         showPopup('Veuillez remplir tous les champs', true);
         return;
     }
 
     const formData = new FormData();
-    formData.append('category_id', categoryId);
     formData.append('category_name', categoryName);
 
     try {
@@ -267,7 +265,10 @@ async function addCategory() {
         const responseData = await response.json();
         display_hide("loading", "main-loading")
         showPopup(responseData.message);
-        if (response.ok) clearInputs(document.getElementById("new-category"));
+        if (response.ok) {
+            clearInputs(document.getElementById("new-category"));
+            location.reload();
+        }
 
     } catch (error) {
         display_hide("loading", "main-loading")

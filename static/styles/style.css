@@ -307,6 +307,9 @@ article p {
 
 }
 
+.red-color {
+    background-color: rgba(211, 22, 22, 0.58);
+}
 
 #reponse {
     text-align: center;

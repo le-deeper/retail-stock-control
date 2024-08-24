@@ -67,7 +67,7 @@ class Produit(models.Model):
                 'prix': product.prix_vente,
                 'categorie': product.categ.nom,
                 'image': product.image.url if product.image else product.image_url,
-                'prix_achat': product.prix_achat if include_prix_achat else None
+                'prix_achat': product.prix_achat if (include_prix_achat and product.prix_achat) else 'Inconnu'
             }
             if eco_mode:
                 product_dict['image'] = ''

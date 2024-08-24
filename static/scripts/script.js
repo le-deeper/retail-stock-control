@@ -31,9 +31,9 @@ function showPopup(message, error=false) {
     popup.innerHTML = message;
     popup.style.display = "block";
     if (error) {
-        popup.style.backgroundColor = "rgba(255,0,0,0.82)";
+        popup.style.backgroundColor = "rgb(255,0,0)";
     } else {
-        popup.style.backgroundColor = "rgba(0,255,0,0.71)";
+        popup.style.backgroundColor = "rgb(0,255,0)";
     }
     setTimeout(function() {
         popup.style.display = "none";

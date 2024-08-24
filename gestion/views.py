@@ -336,7 +336,7 @@ def supply_product(request, gerant):
                                               site=site)
         approvisionnement.save()
         if buy_later:
-            echeance = Paiement(approvisionnement=approvisionnement, type_echeance=Paiement.FOUR)
+            echeance = Paiement(approvisionnement=approvisionnement, destinataire=Paiement.FOUR)
             echeance.save()
         action = Action(categorie=Action.INFO,
                         action=f"Approvisionnement du produit {product.nom} "
@@ -423,15 +423,14 @@ def delete_product(request, gerant):
 @unique_method('POST')
 @logged_in(level=SIMPLE_LEVEL)
 def add_category(request, gerant):
-    category_id = request.POST.get('category_id')
     category_name = request.POST.get('category_name')
 
-    if not category_id or not category_name:
+    if not category_name:
         return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
 
-    category = Categorie(id_categ=category_id, nom=category_name)
+    category = Categorie(nom=category_name)
     action = Action(categorie=Action.INFO,
-                    action=f"Ajour de la catégorie {category_name} (id: {category_id})",
+                    action=f"Ajour de la catégorie {category_name} (id: {category.id_categ})",
                     gerant=gerant)
     action.save()
     category.save()
@@ -627,7 +626,7 @@ def stock_validation(request, gerant):
 @logged_in()
 def deadlines_providers(request, gerant):
     site = get_manager_site(gerant, request)
-    deadlines = Paiement.objects.all().filter(est_terminee=False).filter(type_echeance=Paiement.FOUR)
+    deadlines = Paiement.objects.all().filter(est_terminee=False).filter(destinataire=Paiement.FOUR)
     if site:
         deadlines = deadlines.filter(approvisionnement__gerant__site=site)
     deadlines = deadlines.order_by("-approvisionnement__date_achat")
@@ -641,7 +640,7 @@ def deadlines_providers(request, gerant):
 @logged_in()
 def deadlines_clients(request, gerant):
     site = get_manager_site(gerant, request)
-    deadlines = Paiement.objects.all().filter(est_terminee=False).filter(type_echeance=Paiement.CLIENT)
+    deadlines = Paiement.objects.all().filter(est_terminee=False).filter(destinataire=Paiement.CLIENT)
     if site:
         deadlines = deadlines.filter(commande__gerant__site=site)
     deadlines = deadlines.order_by("-commande__date")

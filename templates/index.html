@@ -23,7 +23,7 @@
                     <div class="form-row">
                         <button class="first-button" onclick="scanBarcode(this, searchByBarcode)">{% trans "Scanner Code bar" %}</button>
                         <input type="number" class="product-code hidden">
-                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this)">
+                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, true, true)">
                         <input type="number" class="quantity" placeholder="{% trans 'Quantité' %}" oninput="calcul_total()">
                         <input type="number" class="price" placeholder="{% trans 'Prix de vente' %}" oninput="calcul_total()">
                         <label><input type="checkbox" class="isGift" oninput="calcul_total()">{% trans "Cadeau" %}</label>
@@ -124,7 +124,7 @@
                     <div class="form-row">
                         <button class="first-button" onclick="scanBarcode(this, searchByBarcode)">{% trans "Scanner Code bar" %}</button>
                         <input type="number" class="product-code hidden" id="change-product-price-id">
-                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, true, false)">
+                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, false, false)">
                     </div>
                     <div class="form-row">
                         <input type="number" class="price" placeholder="{% trans 'Prix de vente' %}" id="change-product-price-price">
@@ -142,7 +142,7 @@
                 <div class="form-container">
                     <div class="form-row">
                         <input type="number" class="product-code hidden" id="delete-product-id">
-                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, true, false)">
+                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, false, false)">
                     </div>
                     <div id="search-results" class="search-results hidden"></div>
                 </div>
@@ -186,8 +186,7 @@
             <hr class="sep">
             <div id="new-category" class="form-container hidden">
                 <div class="form-row">
-                    <input type="number" class="category-code hidden" id="new-category-id">
-                    <input type="text" placeholder="{% trans 'Nom de la categorie' %}">
+                    <input type="text" placeholder="{% trans 'Nom de la categorie' %}" id="new-category-name">
                 </div>
                 <div class="buttons-line">
                     <button id="save-category-btn" class="normal-action" onclick="addCategory()">{% trans "Enregistrer" %}</button>

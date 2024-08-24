@@ -28,6 +28,8 @@ const calcul_total = () => {
 
 const set_choice = (elt, updateTotal, ...changes) => {
     prnt = elt.parentElement.parentElement
+    product_search = prnt.querySelector(".product-search")
+    if (product_search !== null) product_search.classList.remove('red-color')
     console.log(prnt)
     for (let i = 0; i < changes.length; i+=2) {
         if (prnt.getElementsByClassName(changes[i]).length > 0) {
@@ -45,15 +47,13 @@ const set_choice = (elt, updateTotal, ...changes) => {
     if (updateTotal) calcul_total();
 }
 
-const search = (elt, target=null, updateTotal=true, isQtyNeeded=true) => {
+const search = (elt, target=null, updateTotal=false, isQtyNeeded=true) => {
     const query = elt.value;
+    elt.classList.add('red-color')
     let resultsContainer;
-    if (target === null) {
-        resultsContainer = elt.parentElement.parentElement.lastElementChild;
-    }
-    else {
-        resultsContainer = document.getElementById(target);
-    }
+    if (target === null) resultsContainer = elt.parentElement.parentElement.lastElementChild;
+    else resultsContainer = document.getElementById(target);
+
     if (query.length > 0) {
         // Simulate search results
         // const results = ['Produit 1', 'Produit 2', 'Produit 3'].filter(p => p.toLowerCase().includes(query.toLowerCase()));
@@ -73,7 +73,7 @@ const search = (elt, target=null, updateTotal=true, isQtyNeeded=true) => {
                         <div>
                             <img src="${prod.image}" alt="">
                         </div>
-                        <h3 class="result-title">${prod.nom} - ${prod.prix } ${currency} - ${prod.qte} unités - ${prix_achat}</h3>
+                        <h3 class="result-title">${prod.nom} - ${prod.prix } ${currency} - ${prod.qte} unités - ${prix_achat} ${currency}</h3>
                     </div>
                     `
                 }
@@ -152,7 +152,7 @@ function scanBarcode(elt, callback) {
     })
 }
 
-const display_hide = (key, ...ids) => {
+const display_hide = async (key, ...ids) => {
     if (isProcessing) {
         displayingQueue.push([key, ...ids])
     }
