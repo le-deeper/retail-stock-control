@@ -146,9 +146,9 @@ def download_order(request, order_id, gerant):
         f"Date: {command.formated_date}",
         f"Site: {command.site}",
     ]
-    phone_number = Parametre.get_value(Parametre.PHONE_NUMBER).valeur
+    phone_number = Parametre.get_value(Parametre.PHONE_NUMBER)
     if phone_number:
-        details.append(f"Numéro de Téléphone: {phone_number}")
+        details.append(f"Numéro de Téléphone: {phone_number.valeur}")
 
     for detail in details:
         elements.append(Paragraph(detail, arial))
@@ -166,7 +166,7 @@ def download_order(request, order_id, gerant):
             product.prod.nom,
             f"{product.prix:.0f} {currency}",
             product.qte,
-            f"{(product.prix * product.qte):.0f} {currency}",
+            f"{(product.prix * product.qte):.0f} {currency}" if not product.est_cadeau else f"0 {currency} (Offert)",
         ])
 
     left_margin = 20

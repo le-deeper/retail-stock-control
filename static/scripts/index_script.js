@@ -64,8 +64,10 @@ async function sendOrder(parentDiv) {
         const responseData = await response.json();
         display_hide("loading", "main-loading")
         showPopup(responseData.message, responseData.status === 'error');
-        clearInputs(parentDiv)
-        document.getElementById("command-total").textContent = `Total: 0 ${currency}`;
+        if (responseData.status !== 'error') {
+            clearInputs(parentDiv);
+            document.getElementById("command-total").textContent = `Total: 0 ${currency}`;
+        }
     } catch (error) {
         console.error('Failed to submit order:', error);
         display_hide("loading", "main-loading")

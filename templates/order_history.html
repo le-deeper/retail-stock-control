@@ -49,7 +49,7 @@
                                 <input type="number" class="hidden set-product-qty set-input" value="{{ product.qte }}">
                                 <span class="readonly-qty">{{ product.qte }}</span> unités de {{ product.prod.nom }} vendu à
                                 <span class="readonly-price">{{ product.prix }}</span>
-                                <input type="number" class="hidden set-product-price set-input" value="{{ product.prix|floatformat }}"> {{ settings.currency }}</div>
+                                <input type="number" class="hidden set-product-price set-input" value="{{ product.prix|floatformat }}"> {{ settings.currency }} {% if product.est_cadeau %}(Offert){% endif %}</div>
                         {% endfor %}
                     </div>
                     <div class="buttons-line">

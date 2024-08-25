@@ -138,7 +138,7 @@ def submit_order(request, gerant):
         is_buying_later = data.get('is_buying_later', False)
         warning_stock = False
         command_total = CommandeTotale(gerant=gerant,
-                                       paiement=search_engine(MethodePaiement, 'id_paiement', payment_method)[0],
+                                       methode_paiement=search_engine(MethodePaiement, 'id_paiement', payment_method)[0],
                                        commentaire=comment)
         if client_name:
             client = search_engine(Client, 'nom', client_name)
@@ -174,7 +174,11 @@ def submit_order(request, gerant):
                                               prix=price,
                                               qte=quantity,
                                               est_cadeau=is_gift)
-            stock = Stock.objects.filter(prod=prod, site=site).get()
+            try:
+                stock = Stock.objects.filter(prod=prod, site=site).get()
+            except Stock.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': _('Quantité supérieur à celle possédé')},
+                                    status=200)
             if stock.qte < int(quantity):
                 command_total.delete()
                 return JsonResponse({'status': 'error', 'message': _('Quantité supérieur à celle possédé')},
@@ -658,7 +662,7 @@ def deadlines(request, gerant):
     echeance_id = data.get('id_echeance')
     part_to_add = data.get('part_to_add', 0)
     finish_echeance = data.get('finish_echeance', False)
-    echeance = Paiement.objects.get(id_echeance=echeance_id)
+    echeance = Paiement.objects.get(id_paiement=echeance_id)
     if finish_echeance:
         echeance.parti_payee = echeance.total
         echeance.est_terminee = True

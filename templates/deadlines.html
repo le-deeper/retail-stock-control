@@ -13,7 +13,7 @@
             {% for deadline in deadlines_providers %}
                 <div class="deadline">
                     <div class="deadline-info">
-                        <input type="number" class="hidden id_echeance" value="{{ deadline.id_echeance }}">
+                        <input type="number" class="hidden id_echeance" value="{{ deadline.id_paiement }}">
                         {% if deadline.date_echeance %}
                             <div class="deadline-date">Date d'échéance: {{ deadline.date_echeance }}</div>
                         {% endif %}
@@ -52,9 +52,9 @@
             {% for deadline in deadlines_clients %}
                 <div class="deadline">
                     <div class="deadline-info">
-                        <input type="number" class="hidden id_echeance" value="{{ deadline.id_echeance }}">
-                        {% if deadline.date_echeance %}
-                            <div class="deadline-date">Date d'échéance: {{ deadline.date_echeance }}</div>
+                        <input type="number" class="hidden id_echeance" value="{{ deadline.id_paiement }}">
+                        {% if deadline.date_paiement %}
+                            <div class="deadline-date">Date d'échéance: {{ deadline.date_paiement }}</div>
                         {% endif %}
                         <div class="situation">
                             <strong>Evolution: </strong>{{ deadline.parti_payee }} / {{ deadline.total }}
@@ -66,7 +66,7 @@
                             <div class="command">
                                 <input type="hidden" class="command-id" value="{{ command.id }}">
                                 <div class="command-info">
-                                    <p class="command-client">Client: {{ command.client }}</p>
+                                    <p class="command-client">Client: {% if command.client %}{{ command.client }}{% else %}Inconnu{% endif %}</p>
                                     <p class="command-date">Date: {{ command.date }}</p>
                                     <p class="command-paiement">Paiement: {{ command.paiement }}</p>
                                     <p class="command-gerant">Validé Par: {{ command.gerant.nom }}</p>

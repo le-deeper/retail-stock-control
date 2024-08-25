@@ -119,9 +119,9 @@ class Paiement(models.Model):
 
     def __str__(self):
         if self.destinataire == self.CLIENT:
-            return f"Client - {self.commande} - {self.date_paiement}"
+            return f"Client - {self.commande} - {self.date_paiement} ({self.id_paiement})"
         else:
-            return f"Fournisseur - {self.approvisionnement} - {self.date_paiement}"
+            return f"Fournisseur - {self.approvisionnement} - {self.date_paiement} ({self.id_paiement})"
 
 
 class VerificationStock(models.Model):

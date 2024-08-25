@@ -36,7 +36,7 @@ class Commande:
         self.date = command_total.date
         # Changer la date sous le format 'JJ/MM/AAAA à HH:MM:SS'
         self.formated_date = self.date.strftime('%d/%m/%Y %H:%M')
-        self.paiement = command_total.methode_paiement.nom
+        self.methode_paiement = command_total.methode_paiement.nom
         self.products = search(CommandeProduit, 'commande', command_total, True)
         self.comment = command_total.commentaire
         self.total = sum([product.prix * product.qte for product in self.products if not product.est_cadeau])
