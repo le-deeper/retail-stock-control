@@ -40,6 +40,7 @@ Web application to manage stock, orders and supplies for a retail business.
 > 3 connection attempts allowed every hour.  
 
 ### Others
+> Shortcuts (CTRL + M to add a new product in order, CTRL + M to confirm the quantity in the stock...).
 > Application supports all platforms (responsive).  
 > Multi-language support.  
 > Multi-currency support.  
