@@ -10,7 +10,7 @@ from commande.models import *
 from direction.models import Site, Parametre
 from gestion.models import Approvisionnement
 from historique.models import Action
-from utility.actions import create_download_order_action, VERIFICATION_STOCK_KEY
+from utility.actions import VERIFICATION_STOCK_KEY
 from utility.connectivity import logged_in, unique_method
 from utility.errors import BAD_SEARCH, COMMAND_CANT_BE_DOWNLOADED
 from utility.manager_informations import get_manager_site, SUPER_ADMIN_LEVEL
@@ -110,7 +110,6 @@ def download_order(request, order_id, gerant):
             return redirect('/')
 
     command = Commande(command_total)
-    create_download_order_action(gerant, command).save()
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="Reçu n°{command.id}.pdf"'

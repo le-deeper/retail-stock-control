@@ -19,7 +19,7 @@ from retail_stock_control import settings
 from utility.actions import *
 from utility.connectivity import connection, unique_method, logged_in, hash_password
 from utility.errors import *
-from utility.manager_informations import get_manager_site, SIMPLE_LEVEL, SUPER_ADMIN_LEVEL
+from utility.manager_informations import get_manager_site, SUPER_ADMIN_LEVEL, ADMIN_LEVEL
 from utility.search_engine import search as search_engine
 from utility.telegram import send_message_to_admin, TELEGRAM_FORMAT
 
@@ -256,7 +256,7 @@ def edit_order(request, gerant):
 
 
 @unique_method('POST')
-@logged_in(level=SIMPLE_LEVEL)
+@logged_in(level=ADMIN_LEVEL)
 def add_product(request, gerant):
     try:
         data = request.POST
@@ -334,7 +334,7 @@ def supply_product(request, gerant):
 
 
 @unique_method('POST')
-@logged_in(level=SIMPLE_LEVEL)
+@logged_in(level=ADMIN_LEVEL)
 def change_product_price(request, gerant):
     try:
         product_id = request.POST.get('product_id')
@@ -401,7 +401,7 @@ def delete_product(request, gerant):
 
 
 @unique_method('POST')
-@logged_in(level=SIMPLE_LEVEL)
+@logged_in(level=ADMIN_LEVEL)
 def add_category(request, gerant):
     category_name = request.POST.get('category_name')
 
@@ -626,7 +626,7 @@ def deadlines_clients(request, gerant):
 
 
 @unique_method('POST')
-@logged_in(level=SIMPLE_LEVEL)
+@logged_in(level=ADMIN_LEVEL)
 def deadlines(request, gerant):
     data = json.loads(request.body)
     echeance_id = data.get('id_echeance')

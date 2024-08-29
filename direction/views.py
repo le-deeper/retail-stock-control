@@ -6,7 +6,7 @@ from commande.models import CommandeTotale, Commande
 from direction.models import Site, Parametre
 from gestion.models import Produit
 from utility.connectivity import logged_in, unique_method
-from utility.manager_informations import get_manager_site, SIMPLE_LEVEL, ADMIN_LEVEL, SUPER_ADMIN_LEVEL
+from utility.manager_informations import get_manager_site, ADMIN_LEVEL, SUPER_ADMIN_LEVEL
 from utility.search_engine import search
 from utility.stats import *
 
@@ -36,7 +36,7 @@ def get_orders_between_dates(request, gerant):
 
 
 @unique_method('GET')
-@logged_in(level=SIMPLE_LEVEL)
+@logged_in(level=ADMIN_LEVEL)
 def go_to_analysis(request, gerant):
     return render(request, 'analysis.html', context={'gerant': gerant,
                                                      "sites": Site.objects.all() if gerant.est_super_admin else [],
@@ -44,7 +44,7 @@ def go_to_analysis(request, gerant):
 
 
 @unique_method('POST')
-@logged_in(level=SIMPLE_LEVEL)
+@logged_in(level=ADMIN_LEVEL)
 def get_sales_perfs(request, gerant):
     commands = get_orders_between_dates(request, gerant)
     # Calculer les performances
@@ -53,7 +53,7 @@ def get_sales_perfs(request, gerant):
 
 
 @unique_method('POST')
-@logged_in(level=SIMPLE_LEVEL)
+@logged_in(level=ADMIN_LEVEL)
 def get_sales_perfs_chart(request, gerant):
     commands = get_orders_between_dates(request, gerant)
     # Calculer les performances
@@ -62,7 +62,7 @@ def get_sales_perfs_chart(request, gerant):
 
 
 @unique_method('POST')
-@logged_in(level=SIMPLE_LEVEL)
+@logged_in(level=ADMIN_LEVEL)
 def get_sales_per_method_chart(request, gerant):
     commands = get_orders_between_dates(request, gerant)
     # Calculer les performances

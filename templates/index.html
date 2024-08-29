@@ -297,4 +297,10 @@
 
 {% block script_page %}
     <script src="{% static 'scripts/index_script.js' %}"></script>
+    {% if gerant.est_admin or gerant.est_super_admin %}
+        <script src="{% static 'scripts/index_admin_script.js' %}"></script>
+    {% endif %}
+    {% if gerant.est_super_admin %}
+        <script src="{% static 'scripts/index_super_admin_script.js' %}"></script>
+    {% endif %}
 {% endblock %}

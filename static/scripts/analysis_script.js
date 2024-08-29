@@ -154,37 +154,27 @@ async function fetchSalesPerformance() {
     await fetchPerformance('/sales/', 'results-sales', 'start-date-sales', 'end-date-sales', 'main-loading');
 }
 
-async function fetchRentPerformance() {
-    await fetchPerformance('/revenue/', 'results-rent', 'start-date-revenue', 'end-date-revenue', 'main-loading');
-}
-
 async function fetchSalesPerformanceChart() {
-    fetchPerformanceChart('/sales_chart/', 'sales-perfs-canvas',
+    await fetchPerformanceChart('/sales_chart/', 'sales-perfs-canvas',
         'start-date-perfs-charts', 'end-date-perfs-charts',
         'type-perfs-charts', 'label-perfs-charts', 'main-loading', 'Chiffre d\'affaires')
 }
 
 async function fetchSalesPerMethodPerformanceChart() {
-    fetchPerformanceChart('/sales_per_method_chart/', 'sales-perfs-per-method-canvas',
+    await fetchPerformanceChart('/sales_per_method_chart/', 'sales-perfs-per-method-canvas',
         'start-date-perfs-per-method-charts', 'end-date-perfs-per-method-charts',
         'type-perfs-per-method-charts', 'label-perfs-per-method-charts', 'main-loading', 'Chiffre d\'affaires', false)
 }
 
-async function fetchRentsPerformanceChart() {
-    fetchPerformanceChart('/revenue_chart/', 'sales-rents-canvas',
-        'start-date-rents-charts', 'end-date-rents-charts',
-        'type-rents-charts', 'label-rents-charts', 'main-loading', 'Bénéfices')
-}
-
 async function fetchProductsSalesChart() {
-    fetchPerformanceChart('/products_sales/', 'products-sales-canvas',
+    await fetchPerformanceChart('/products_sales/', 'products-sales-canvas',
         'start-date-products-sales', 'end-date-products-sales',
         'type-products-sales', 'label-products-sales', 'main-loading',
         'Nombre de ventes par produit', isXDate=false)
 }
 
 async function fetchProductsTotalChart() {
-    fetchPerformanceChart('/products_total/', 'products-total-canvas',
+    await fetchPerformanceChart('/products_total/', 'products-total-canvas',
         'start-date-products-total', 'end-date-products-total',
         'type-products-total', 'label-products-total', 'main-loading',
         'Nombre total de produits vendus')
@@ -192,7 +182,7 @@ async function fetchProductsTotalChart() {
 
 async function fetchProductTotalChart() {
 
-    fetchPerformanceChart('/product_total/', 'product-total-canvas',
+    await fetchPerformanceChart('/product_total/', 'product-total-canvas',
         'start-date-product-total', 'end-date-product-total',
         'type-product-total', 'label-product-total', 'main-loading',
         'Nombre total de produits vendus', isXDate=true, 'product_id',

@@ -14,12 +14,6 @@ def create_changing_qty_action(gerant, product, stock, quantity):
                   gerant=gerant)
 
 
-def create_download_order_action(gerant, command):
-    return Action(categorie=Action.INFO,
-                  action=f"Téléchargement de la commande n° {command.id} par {gerant}",
-                  gerant=gerant)
-
-
 def create_delete_category_action(gerant, category):
     return Action(categorie=Action.WARNING,
                   action=f"SUPPRESSION de la catégorie {category.nom} (id: {category.id_categ})",
