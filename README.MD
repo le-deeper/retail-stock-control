@@ -71,6 +71,9 @@ Web application to manage stock, orders and supplies for a retail business.
 > In addition, you need to ensure that sensitive javascript code is not accessible from simple manager requests (
 > for example, the code of a js function that allows you to add a manager, even if the latter can't execute this function anyway because he lacks privileges).
 
+### Actions Translations
+> The actions sent to the manager can be translated into the current language.
+
 ## Settings
 - __*bot_token*__: telegram bot token
 - __*chat_id*__: id of the conversation to which to send manager actions
@@ -107,7 +110,8 @@ Web application to manage stock, orders and supplies for a retail business.
 #### Use a database
 - Install a database (e.g. PostgreSQL)
 - Add the database settings to the settings.py file
-- start command: ```python manage.py makemigrations && python manage.py migrate && python manage.py flush --no-input && python manage.py loaddata db.json && gunicorn stockManager.wsgi --log-file -```
+- Export the database with ```python manage.py dumpdata > db.json```
+- start command (delete ```python manage.py loaddata db.json``` if you don't have data to import): ```python manage.py makemigrations && python manage.py migrate && python manage.py flush --no-input && python manage.py loaddata db.json && gunicorn stockManager.wsgi --log-file -```
 #### E.g. Use a PostgreSQL database
 - Install PostgreSQL with ```pip install psycopg2```
 - in settings.py, add the following lines:

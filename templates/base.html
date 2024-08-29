@@ -51,9 +51,13 @@
                 </ul>
             </li>
             <li>
-            <a href="/stock_verification/">{% trans "Stock" %}</a>
+                <a>{% trans "Stock" %}</a>
+                <ul>
+                    <li><a href="/stock/">{% trans "Stock" %}</a></li>
+                    <li><a href="/stock_verification/">{% trans "Vérification" %}</a></li>
+                </ul>
             </li>
-            {% if gerant and gerant.est_admin %}
+            {% if gerant.est_super_admin or gerant.est_admin %}
                 <li>
                     <a href="/analyse">{% trans "Analyse" %}</a>
                 </li>

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load static %}
+{% block title %}<title>StockManager</title>{% endblock %}
+{% block style_page %}
+    <link rel="stylesheet" href="{% static 'styles/stock_style.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="form-container">
+        <div class="form-row">
+            <input name="query" type="text" id="search" placeholder="Rechercher une commande">
+        </div>
+        <div class="buttons-line">
+            <button class="normal-action" onclick="searchProducts()">Rechercher</button>
+        </div>
+        <div id="main-loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Chargement...</p>
+        </div>
+        <div id="products">
+            
+        </div>
+        <div id="no-product-found" class="hidden">
+            Aucun produit trouvé
+        </div>
+    </div>
+{% endblock %}
+{% block script_page %}
+    <script>
+        const products = [
+            {% for product in products %}
+                {
+                    id: {{ product.code }},
+                    name: "{{ product.nom }}",
+                    price: {{ product.prix|floatformat }},
+                    qty: {{ product.qte }},
+                {% if product.image %}
+                    image: "{{ product.image }}",
+                {% endif %}
+                },
+            {% endfor %}
+        ]
+    </script>
+    <script src="{% static 'scripts/stock_script.js' %}"></script>
+{% endblock %}

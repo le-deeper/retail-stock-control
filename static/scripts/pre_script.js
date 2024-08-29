@@ -154,7 +154,7 @@ function scanBarcode(elt, callback) {
 
 const display_hide = async (key, ...ids) => {
     if (isProcessing) {
-        displayingQueue.push([key, ...ids])
+        displayingQueue = [key, ...ids];
     }
     isProcessing = true;
     if (showed_elt[key] === undefined) showed_elt[key] = [];
@@ -173,7 +173,7 @@ const display_hide = async (key, ...ids) => {
     }
     isProcessing = false
     if (displayingQueue.length > 0) {
-        display_hide(...displayingQueue.pop());
+        await display_hide(...displayingQueue);
     }
 };
 

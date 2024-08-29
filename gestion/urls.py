@@ -25,6 +25,7 @@ urlpatterns = [
     path('add_site/', add_site, name='add_site'),
     path('promote_gerant/', promote_gerant, name='promote_gerant'),
     path('demote_gerant/', demote_gerant, name='demote_gerant'),
+    path('stock/', stock, name='stock'),
     path('stock_verification/', stock_verification, name='stock_verification'),
     path('stock_validation/', stock_validation, name='stock_validation'),
     path('deadlines_providers/', deadlines_providers, name='deadlines_providers'),
