@@ -40,12 +40,14 @@ class Parametre(models.Model):
     CURRENCY = 3
     PHONE_NUMBER = 4
     ECO_MODE = 5
+    IMAGE_PATH = 6
     KEYS = {
         BOT_TOKEN: 'bot_token',
         CHAT_ID: 'chat_id',
         CURRENCY: 'currency',
         PHONE_NUMBER: 'phone_number',
-        ECO_MODE: 'eco_mode'
+        ECO_MODE: 'eco_mode',
+        IMAGE_PATH: 'image_path',
     }
     nom = models.IntegerField(primary_key=True,
                               choices=[(k, v) for k, v in KEYS.items()])

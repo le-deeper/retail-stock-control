@@ -2,6 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 from commande.models import CommandeProduit
+from direction.models import Parametre
 from utility.search_engine import search
 
 
@@ -60,13 +61,15 @@ class Produit(models.Model):
             if site:
                 stock = Stock.objects.filter(prod=product, site=site)
                 qte = stock[0].qte if stock else 0
+            default_image = Parametre.get_value(Parametre.IMAGE_PATH).valeur if Parametre.get_value(Parametre.IMAGE_PATH) else ''
             product_dict = {
                 'code': product.id_prod,
                 'nom': product.nom,
                 'qte': qte,
                 'prix': product.prix_vente,
                 'categorie': product.categ.nom,
-                'image': product.image.url if product.image else product.image_url,
+                'image': product.image.url if product.image else
+                (product.image_url if product.image_url else default_image),
                 'prix_achat': product.prix_achat if (include_prix_achat and product.prix_achat) else 'Inconnu'
             }
             if eco_mode:
