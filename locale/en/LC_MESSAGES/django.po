@@ -1,0 +1,548 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-31 21:21+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\retail_stock_control\settings.py:119
+msgid "Français"
+msgstr "French"
+
+#: .\templates\actions_history.html:9
+msgid "Voir que les actions dûes à une vérification de stock"
+msgstr "See actions due to a stock check only"
+
+#: .\templates\actions_history.html:21
+msgid "Aucune actions enregistrées"
+msgstr "No actions recorded"
+
+#: .\templates\analysis.html:14
+msgid "Statistiques"
+msgstr "Statistics"
+
+#: .\templates\analysis.html:16 .\templates\analysis.html:64
+msgid "Chiffre d'affaires"
+msgstr "Revenue"
+
+#: .\templates\analysis.html:18
+msgid "Bénéfice"
+msgstr "Profit"
+
+#: .\templates\analysis.html:27 .\templates\analysis.html:46
+#: .\templates\analysis.html:76 .\templates\analysis.html:111
+#: .\templates\analysis.html:147 .\templates\analysis.html:186
+#: .\templates\analysis.html:215 .\templates\analysis.html:255
+msgid "Date de début"
+msgstr "Start date"
+
+#: .\templates\analysis.html:29 .\templates\analysis.html:48
+#: .\templates\analysis.html:78 .\templates\analysis.html:113
+#: .\templates\analysis.html:149 .\templates\analysis.html:188
+#: .\templates\analysis.html:217 .\templates\analysis.html:257
+msgid "Date de fin"
+msgstr "End date"
+
+#: .\templates\analysis.html:34 .\templates\analysis.html:54
+#: .\templates\analysis.html:100 .\templates\analysis.html:135
+#: .\templates\analysis.html:165 .\templates\analysis.html:204
+#: .\templates\analysis.html:239 .\templates\analysis.html:279
+msgid "Valider"
+msgstr "Submit"
+
+#: .\templates\analysis.html:62
+msgid "Graphiques"
+msgstr "Charts"
+
+#: .\templates\analysis.html:65
+msgid "Chiffre d'Affaires par méthode"
+msgstr "Revenue by method"
+
+#: .\templates\analysis.html:67
+msgid "Bénéfices"
+msgstr "Profits"
+
+#: .\templates\analysis.html:82 .\templates\analysis.html:117
+#: .\templates\analysis.html:153 .\templates\analysis.html:192
+#: .\templates\analysis.html:221 .\templates\analysis.html:261
+msgid "Type de graphique"
+msgstr "Chart type"
+
+#: .\templates\analysis.html:84 .\templates\analysis.html:119
+#: .\templates\analysis.html:155 .\templates\analysis.html:194
+#: .\templates\analysis.html:223 .\templates\analysis.html:263
+msgid "Ligne"
+msgstr "Line"
+
+#: .\templates\analysis.html:85 .\templates\analysis.html:120
+#: .\templates\analysis.html:156 .\templates\analysis.html:195
+#: .\templates\analysis.html:224 .\templates\analysis.html:264
+msgid "Barres"
+msgstr "Bar"
+
+#: .\templates\analysis.html:86 .\templates\analysis.html:121
+#: .\templates\analysis.html:157 .\templates\analysis.html:196
+#: .\templates\analysis.html:225 .\templates\analysis.html:265
+msgid "Radar"
+msgstr "Radar"
+
+#: .\templates\analysis.html:87 .\templates\analysis.html:122
+#: .\templates\analysis.html:158 .\templates\analysis.html:197
+#: .\templates\analysis.html:226 .\templates\analysis.html:266
+msgid "Camembert"
+msgstr "Pie"
+
+#: .\templates\analysis.html:88 .\templates\analysis.html:123
+#: .\templates\analysis.html:159 .\templates\analysis.html:198
+#: .\templates\analysis.html:227 .\templates\analysis.html:267
+msgid "Donut"
+msgstr "Donut"
+
+#: .\templates\analysis.html:90 .\templates\analysis.html:125
+#: .\templates\analysis.html:229 .\templates\analysis.html:269
+msgid "Regroupé par: "
+msgstr "Grouped by:"
+
+#: .\templates\analysis.html:92 .\templates\analysis.html:127
+#: .\templates\analysis.html:231 .\templates\analysis.html:271
+msgid "Jour"
+msgstr "Day"
+
+#: .\templates\analysis.html:93 .\templates\analysis.html:128
+#: .\templates\analysis.html:232 .\templates\analysis.html:272
+msgid "Mois"
+msgstr "Month"
+
+#: .\templates\analysis.html:94 .\templates\analysis.html:129
+#: .\templates\analysis.html:233 .\templates\analysis.html:273
+msgid "Année"
+msgstr "Year"
+
+#: .\templates\analysis.html:174 .\templates\index.html:56
+#: .\templates\order_history.html:20
+msgid "Produits"
+msgstr "Products"
+
+#: .\templates\analysis.html:176
+msgid "Nombre de produits vendus"
+msgstr "Number of products sold"
+
+#: .\templates\analysis.html:177
+msgid "Total de produits vendus"
+msgstr "Total products sold"
+
+#: .\templates\analysis.html:178
+msgid "Produit en particulier"
+msgstr "Specific product"
+
+#: .\templates\analysis.html:249 .\templates\index.html:24
+#: .\templates\index.html:100 .\templates\index.html:125
+#: .\templates\index.html:167
+msgid "Scanner Code bar"
+msgstr "Scan barcode"
+
+#: .\templates\analysis.html:251 .\templates\index.html:26
+#: .\templates\index.html:102 .\templates\index.html:127
+#: .\templates\index.html:145 .\templates\index.html:160
+msgid "Rechercher un produit"
+msgstr "Search for a product"
+
+#: .\templates\base.html:41
+msgid "Accueil"
+msgstr "Home"
+
+#: .\templates\base.html:44
+msgid "Historique"
+msgstr "History"
+
+#: .\templates\base.html:46 .\templates\index.html:15
+msgid "Commandes"
+msgstr "Orders"
+
+#: .\templates\base.html:48
+msgid "Actions"
+msgstr "Actions"
+
+#: .\templates\base.html:50
+msgid "Approvisionnement"
+msgstr "Supply"
+
+#: .\templates\base.html:54 .\templates\base.html:56
+msgid "Stock"
+msgstr "Stock"
+
+#: .\templates\base.html:57
+msgid "Vérification"
+msgstr "Verification"
+
+#: .\templates\base.html:62
+msgid "Analyse"
+msgstr "Analysis"
+
+#: .\templates\base.html:69
+msgid "Paiements"
+msgstr "Payments"
+
+#: .\templates\base.html:71
+msgid "Fournisseurs"
+msgstr "Suppliers"
+
+#: .\templates\base.html:72
+msgid "Clients"
+msgstr "Clients"
+
+#: .\templates\base.html:76
+msgid "Déconnexion"
+msgstr "Logout"
+
+#: .\templates\base.html:79
+msgid "Langue"
+msgstr "Language"
+
+#: .\templates\base.html:96
+msgid "Site"
+msgstr "Site"
+
+#: .\templates\base.html:112
+#, python-format
+msgid "Connecté en tant que: %(gerant_nom)s"
+msgstr "Logged in as: %(gerant_nom)s"
+
+#: .\templates\deadlines.html:42 .\templates\deadlines.html:78
+msgid "Indiquer la somme à ajouter"
+msgstr "Indicate the amount to add"
+
+#: .\templates\deadlines.html:43 .\templates\deadlines.html:79
+#: .\templates\index.html:49 .\templates\index.html:237
+#: .\templates\index.html:289
+msgid "Ajouter"
+msgstr "Add"
+
+#: .\templates\deadlines.html:46 .\templates\deadlines.html:82
+msgid "Terminer l'échéance"
+msgstr "Complete the deadline"
+
+#: .\templates\deadlines.html:88
+msgid "Aucune échéance"
+msgstr "No deadline"
+
+#: .\templates\index.html:18
+msgid "Nouvelle commande"
+msgstr "New order"
+
+#: .\templates\index.html:27 .\templates\index.html:105
+msgid "Quantité"
+msgstr "Quantity"
+
+#: .\templates\index.html:28 .\templates\index.html:85
+#: .\templates\index.html:130
+msgid "Prix de vente"
+msgstr "Sale price"
+
+#: .\templates\index.html:29
+msgid "Cadeau"
+msgstr "Gift"
+
+#: .\templates\index.html:35
+msgid "Nom du client"
+msgstr "Customer name"
+
+#: .\templates\index.html:37
+msgid "Sélectionner une méthode de paiement"
+msgstr "Select a payment method"
+
+#: .\templates\index.html:42
+msgid "Le client paye plus tard"
+msgstr "Customer pays later"
+
+#: .\templates\index.html:45
+msgid "Commentaire"
+msgstr "Comment"
+
+#: .\templates\index.html:50 .\templates\index.html:92
+#: .\templates\index.html:192
+msgid "Enregistrer"
+msgstr "Save"
+
+#: .\templates\index.html:59
+msgid "Nouveau produit"
+msgstr "New product"
+
+#: .\templates\index.html:61
+msgid "Approvisionner produit"
+msgstr "Supply product"
+
+#: .\templates\index.html:63
+msgid "Changer prix produit"
+msgstr "Change product price"
+
+#: .\templates\index.html:66
+msgid "Supprimer produit"
+msgstr "Delete product"
+
+#: .\templates\index.html:74
+msgid "Nom du produit"
+msgstr "Product name"
+
+#: .\templates\index.html:76
+msgid "Sélectionner une catégorie"
+msgstr "Select a category"
+
+#: .\templates\index.html:81
+msgid "Code bar du produit (falcultatif)"
+msgstr "Product barcode (optional)"
+
+#: .\templates\index.html:84
+msgid "Quantité d'urgence"
+msgstr "Emergency quantity"
+
+#: .\templates\index.html:88
+msgid "Choisir une image"
+msgstr "Choose an image"
+
+#: .\templates\index.html:89
+msgid "URL de l'image"
+msgstr "Image URL"
+
+#: .\templates\index.html:106
+msgid "Prix d'achat"
+msgstr "Purchase price"
+
+#: .\templates\index.html:107 .\templates\supplying_history.html:17
+msgid "Fournisseur"
+msgstr "Supplier"
+
+#: .\templates\index.html:111
+msgid "Changer le prix d'achat"
+msgstr "Change purchase price"
+
+#: .\templates\index.html:112
+msgid "Acheter plus tard"
+msgstr "Buy later"
+
+#: .\templates\index.html:117
+msgid "Approvisionner"
+msgstr "Supply"
+
+#: .\templates\index.html:135
+msgid "Modifier"
+msgstr "Edit"
+
+#: .\templates\index.html:150 .\templates\index.html:205
+#: .\templates\index.html:280
+msgid "Supprimer"
+msgstr "Delete"
+
+#: .\templates\index.html:179
+msgid "Categories"
+msgstr "Categories"
+
+#: .\templates\index.html:181
+msgid "Ajouter une catégorie"
+msgstr "Add a category"
+
+#: .\templates\index.html:183
+msgid "Supprimer une catégorie"
+msgstr "Delete a category"
+
+#: .\templates\index.html:189
+msgid "Nom de la categorie"
+msgstr "Category name"
+
+#: .\templates\index.html:213
+msgid "Administration"
+msgstr "Administration"
+
+#: .\templates\index.html:215
+msgid "Ajouter un administrateur"
+msgstr "Add an administrator"
+
+#: .\templates\index.html:216
+msgid "Promouvoir un administrateur"
+msgstr "Promote an administrator"
+
+#: .\templates\index.html:217
+msgid "Retrograder un administrateur"
+msgstr "Demote an administrator"
+
+#: .\templates\index.html:218
+msgid "Supprimer un administrateur"
+msgstr "Delete an administrator"
+
+#: .\templates\index.html:219
+msgid "Ajouter un site"
+msgstr "Add a site"
+
+#: .\templates\index.html:233
+msgid "Ce gérant doit être admin"
+msgstr "This manager must be admin"
+
+#: .\templates\index.html:252
+msgid "Promouvoir"
+msgstr "Promote"
+
+#: .\templates\index.html:267
+msgid "Releguer gérant"
+msgstr "Demote manager"
+
+#: .\templates\login.html:10
+msgid "Connexion"
+msgstr "Login"
+
+#: .\templates\login.html:13
+msgid "Nom d'utilisateur"
+msgstr "Username"
+
+#: .\templates\login.html:16
+msgid "Mot de passe"
+msgstr "Password"
+
+#: .\templates\login.html:19
+msgid "Se connecter"
+msgstr "Sign in"
+
+#: .\templates\order_history.html:16
+msgid "Nom Client"
+msgstr "Client name"
+
+#: .\templates\order_history.html:17 .\templates\supplying_history.html:16
+msgid "Date"
+msgstr "Date"
+
+#: .\templates\order_history.html:18
+msgid "Paiement"
+msgstr "Payment"
+
+#: .\templates\order_history.html:19
+msgid "Total à 50 près"
+msgstr "Total to nearest 50"
+
+#: .\templates\order_history.html:21 .\templates\supplying_history.html:19
+msgid "Gerant"
+msgstr "Manager"
+
+#: .\templates\order_history.html:24 .\templates\supplying_history.html:22
+msgid "Rechercher"
+msgstr "Search"
+
+#: .\templates\order_history.html:58
+msgid "Télécharger Reçu"
+msgstr "Download Receipt"
+
+#: .\templates\order_history.html:78
+msgid "Aucune commande trouvée"
+msgstr "No order found"
+
+#: .\templates\order_history.html:85 .\templates\supplying_history.html:54
+msgid "Comment rechercher"
+msgstr "How to search"
+
+#: .\templates\order_history.html:87 .\templates\supplying_history.html:56
+msgid ""
+"Rechercher en utilisant des critères séparés par des tires (critère1-"
+"valeur , critère2-valeur)"
+msgstr ""
+"Search using criteria separated by dashes (criteria1-value, criteria2-value)"
+
+#: .\templates\order_history.html:88
+msgid "Rechercher avec le nom d'un client -> client-nom du client"
+msgstr "Search by client name -> client-client name"
+
+#: .\templates\order_history.html:89
+msgid "Rechercher avec le paiement -> paiement-nom du paiement"
+msgstr "Search by payment -> payment-payment name"
+
+#: .\templates\order_history.html:90
+msgid "Rechercher avec le total -> total-nombre"
+msgstr "Search by total -> total-number"
+
+#: .\templates\order_history.html:91 .\templates\supplying_history.html:57
+msgid "Rechercher avec le nom d'un produit -> produit-nom du produit"
+msgstr "Search by product name -> product-product name"
+
+#: .\templates\order_history.html:92 .\templates\supplying_history.html:58
+msgid "Rechercher avec le nom d'un gerant -> gerant-nom du gerant"
+msgstr "Search by manager name -> manager-manager name"
+
+#: .\templates\order_history.html:93 .\templates\supplying_history.html:60
+msgid ""
+"Rechercher avec la date -> jj/mm/aaaa ou jj/mm/aaaa ou jj/mm/aaaa hh: ou jj/"
+"mm/aaaa hh:mm"
+msgstr ""
+"Search by date -> dd/mm/yyyy or dd/mm/yyyy hh: or dd/mm/yyyy hh:mm"
+
+#: .\templates\order_history.html:94
+msgid "Exemple: client-mourad , date-12/01/2024 13:"
+msgstr "Example: client-mourad, date-12/01/2024 13:"
+
+#: .\templates\order_history.html:95 .\templates\supplying_history.html:61
+msgid "Exemple: gerant-ousmane , date-12/01/2022 19-23"
+msgstr "Example: manager-ousmane, date-12/01/2022 19-23"
+
+#: .\templates\order_history.html:96
+msgid "Exemple: paiement-espèce , 12/01/2022 , total-1200"
+msgstr "Example: payment-cash, 12/01/2022, total-1200"
+
+#: .\templates\order_history.html:100 .\templates\supplying_history.html:66
+msgid "Fermer"
+msgstr "Close"
+
+#: .\templates\stock_verification.html:16
+msgid "Date:"
+msgstr "Date:"
+
+#: .\templates\stock_verification.html:17
+msgid "Validé par:"
+msgstr "Validated by:"
+
+#: .\templates\stock_verification.html:24
+msgid "Démarrer une verification"
+msgstr "Start a verification"
+
+#: .\templates\stock_verification.html:37
+msgid "Quantité en stock:"
+msgstr "Quantity in stock:"
+
+#: .\templates\stock_verification.html:42
+msgid "Signaler la quantité manquante"
+msgstr "Report missing quantity"
+
+#: .\templates\stock_verification.html:49
+msgid "Terminer"
+msgstr "Finish"
+
+#: .\templates\supplying_history.html:13
+msgid "Rechercher un approvisionnement"
+msgstr "Search for a supply"
+
+#: .\templates\supplying_history.html:47
+msgid "Aucun approvisionnement trouvée"
+msgstr "No supply found"
+
+#: .\templates\supplying_history.html:59
+msgid "Rechercher avec le nom d'un fournisseur -> four-nom du four"
+msgstr "Search using a supplier's name -> supp-name of supplier"
+
+#: .\templates\supplying_history.html:62
+msgid "Exemple: gerant-Housseine , 12/01/2022 , four-Ousmane"
+msgstr "Example: manager-Housseine , 12/01/2022 , supp-Ousmane"
+
+#: .\utility\connectivity.py:51
+msgid "Vous n'avez pas les droits nécessaires pour accéder à cette page."
+msgstr "You do not have the necessary rights to access this page."
+
+#: .\utility\connectivity.py:53
+msgid "Vous devez vous connecter pour accéder à cette page."
+msgstr "You need to log in to access this page."
