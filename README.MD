@@ -22,16 +22,16 @@ Web application to manage stock, orders and supplies for a retail business.
 > Print order receipt.
 
 ### Administration
-> Add, edit and delete managers.
+> Add, edit and delete managers.  
 > Several privilege levels.  
-> Separation of orders by site (if several stores).
+> Separation of orders by site (if several stores).  
 > Possibility of recording customers paying later.  
-> Possibility of recording that suppliers will be paid at a later date.
+> Possibility of recording that suppliers will be paid at a later date.      
 > Recording of each manager's actions with a severity level.  
 > Send these actions on telegram to a specific conversation.  
 
 ### Management
-> Statistics (sales, revenue, number of products sold, total number of products sold, sales of a particular product) for each or all sites.  
+> Statistics (sales, revenue, number of products sold, total number of products sold, sales of a particular product) for each or all sites.    
 > Graphs by criteria (by day, by month, by year, by payment method) and several graph types available.  
 > Inventory verification record.  
 
@@ -40,21 +40,22 @@ Web application to manage stock, orders and supplies for a retail business.
 > 3 connection attempts allowed every hour.  
 
 ### Others
-> Shortcuts (CTRL + M to add a new product in order, CTRL + M to confirm the quantity in the stock...).
+> Shortcuts (CTRL + M to add a new product in order, CTRL + M to confirm the quantity in the stock...).  
 > Application supports all platforms (responsive).  
 > Multi-language support.  
 > Multi-currency support.  
 > Multi-store support.  
 > Possibility of adding a telephone number to invoices.  
-> Eco-mode (fewer heavy requests to servers, such as requests for files, images, etc.).
+> Eco-mode (fewer heavy requests to servers, such as requests for files, images, etc.).  
 > Customized messages after various actions.  
 > Flexible, modular package code.  
+> A default image for products.  
 
 
 ## Features that can be added
 ### Personalization
 > A page for customizing the various elements of the site that can be added, such as the possibility of changing the 
-> logo and name of the mobile app, or changing the colors by overloading CSS variables.
+> logo and name of the mobile app, or changing the colors by overloading CSS variables.  
 
 ### Notifications
 > A reminder of actions not yet seen by the main manager can be added
@@ -65,11 +66,6 @@ Web application to manage stock, orders and supplies for a retail business.
 
 ### Factoring
 > Files such as index_script.js can be factorized.
-
-### Security
-> The application can be made more secure by adding a captcha to the login page, or by adding a two-factor authentication.
-> In addition, you need to ensure that sensitive javascript code is not accessible from simple manager requests (
-> for example, the code of a js function that allows you to add a manager, even if the latter can't execute this function anyway because he lacks privileges).
 
 ### Actions Translations
 > The actions sent to the manager can be translated into the current language.
