@@ -3,6 +3,7 @@ from django.db import models
 
 # Create your models here.
 class Action(models.Model):
+    """Action made by a manager"""
     INFO = 1
     WARNING = 2
     ERROR = 3
@@ -17,6 +18,7 @@ class Action(models.Model):
 
 
 class Tentative(models.Model):
+    """Tentative to connect to the application"""
     id = models.AutoField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)
     pseudo = models.CharField(max_length=255)
@@ -26,6 +28,7 @@ class Tentative(models.Model):
 
 
 class Session(models.Model):
+    """Session of a manager"""
     id = models.AutoField(primary_key=True)
     valeur = models.CharField(max_length=255)
     datelimit = models.DateField()

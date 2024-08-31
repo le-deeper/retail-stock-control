@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Client(models.Model):
+    """Model for the client"""
     id_cli = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
 
@@ -12,6 +13,7 @@ class Client(models.Model):
 
 
 class Site (models.Model):
+    """Model for the site"""
     nom = models.CharField(max_length=255, primary_key=True)
 
     def __str__(self):
@@ -19,6 +21,7 @@ class Site (models.Model):
 
 
 class Gerant(models.Model):
+    """Model for the manager"""
     gerant = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     mdp = models.CharField(max_length=255)
@@ -30,11 +33,13 @@ class Gerant(models.Model):
         return f"{self.nom} - est admin: {self.est_admin} - est super admin{self.est_super_admin}"
 
     def clean(self):
+        # A manager must have a site if he is not a super admin
         if not self.est_super_admin and not self.site:
             raise ValidationError("Un gérant non super admin doit être associé à un site.")
 
 
 class Parametre(models.Model):
+    """Model for the parameters"""
     BOT_TOKEN, CHAT_ID, CURRENCY, PHONE_NUMBER, ECO_MODE, IMAGE_PATH, TOTAL_TOLERANCE = range(1, 8)
 
     KEYS = {
@@ -55,11 +60,16 @@ class Parametre(models.Model):
 
     @staticmethod
     def get_value(key):
+        """Get the value of a parameter by its key
+        :param key: the key of the parameter
+        :return: the value of the parameter or None if it does not exist"""
         values = Parametre.objects.filter(nom=key)
         return values[0] if values else None
 
     @staticmethod
     def parametre_to_dict():
+        """Get the parameters as a dictionary
+        :return: the parameters as a dictionary"""
         parametres_dict = {}
         for parametre in Parametre.objects.all():
             key = Parametre.KEYS.get(parametre.nom, None)

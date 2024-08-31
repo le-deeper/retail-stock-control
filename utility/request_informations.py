@@ -5,6 +5,7 @@ from utility.search_engine import search
 
 
 def get_manager_by_session(request):
+    """Get the manager by the session cookie"""
     session = request.COOKIES.get('session', None)
     if session:
         # vérifier si la session est valide
@@ -17,6 +18,7 @@ def get_manager_by_session(request):
 
 
 def get_ip(request):
+    """Get the IP address of the user"""
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]

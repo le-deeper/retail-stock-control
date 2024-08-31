@@ -26,7 +26,7 @@ from utility.telegram import send_message_to_admin, TELEGRAM_FORMAT
 
 # Create your views here.
 def change_language(request, lang_code):
-    """Modifie la langue en changeant la valeur du cookie"""
+    """Change the language by changing the value of the cookie"""
     next_url = request.GET.get('next', '/')
     response = redirect(next_url)
     response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang_code)
@@ -35,7 +35,7 @@ def change_language(request, lang_code):
 
 
 def change_site(request, site):
-    """Modifie le site en changeant la valeur du cookie"""
+    """Change the site by changing the value of the cookie"""
     next_url = request.GET.get('next', '/')
     response = redirect(next_url)
     response.set_cookie('site', site)
@@ -48,7 +48,6 @@ def go_to_login(request):
         data = json.loads(request.body)
         username = data.get('username')
         password = data.get('password')
-        # gerant = search_engine(Gerant, 'nom', username)
         gerant = connection(username, password)
         tentatives = Tentative.objects.filter(pseudo=username).order_by('-date')[:3]
         attempts = 0
@@ -58,7 +57,7 @@ def go_to_login(request):
         if attempts >= 3:
             return JsonResponse({'status': 'error', 'message': _(TOO_MANY_ATTEMPTS)}, status=401)
         if gerant:
-            # Enregistrer une session pour ce gerant avec comme valeur l'uuid actuel
+            # Save the session with the actual uuid
             session = Session(valeur=str(uuid4()), datelimit=datetime.now() + timedelta(days=5), gerant=gerant)
             session.save()
             return JsonResponse({'status': 'success', 'message': _(CONNECTION_SUCCESS), 'session': session.valeur,
@@ -191,8 +190,8 @@ def submit_order(request, gerant):
             stock.save()
             product_command.save()
         if is_buying_later:
-            echeance = Paiement(commande=command_total)
-            echeance.save()
+            deadline = Paiement(commande=command_total)
+            deadline.save()
         warning_msg = "" if not warning_stock else _(QUANTITY_UNDER_WARNING)
         return JsonResponse({'status': 'success', 'message': _(COMMAND_SAVED) + "." + warning_msg}, status=201)
     except json.JSONDecodeError:
@@ -236,7 +235,7 @@ def edit_order(request, gerant):
             if stock.qte < quantity:
                 stock.qte -= product_command.qte
                 return JsonResponse({'status': 'error', 'message': _(QUANTITY_NOT_ENOUGH) +
-                                                                   f"pour le produit {product_command.prod.nom}"},
+                                                                   f" ({product_command.prod.nom})"},
                                     status=200)
             else:
                 stock.qte -= quantity
@@ -245,7 +244,7 @@ def edit_order(request, gerant):
                 action = create_warning_stock_action(gerant, prod, stock.qte)
                 action.save()
                 send_message_to_admin(TELEGRAM_FORMAT.format(title=action.gerant.nom, description=action.action,
-                                                             date=action.date.strftime('%d/%m/%Y à %H:%M')))
+                                                             date=action.date.strftime('%d/%m/%Y %H:%M')))
 
             stock.save()
             product_command.save()
@@ -327,7 +326,7 @@ def supply_product(request, gerant):
         if buy_later:
             echeance = Paiement(approvisionnement=approvisionnement, destinataire=Paiement.FOUR)
             echeance.save()
-        action = create_supplying_product_action(gerant, product, quantity).save()
+        create_supplying_product_action(gerant, product, quantity).save()
 
         return JsonResponse({'status': 'success', 'message': _(PRODUCT_UPDATED)}, status=201)
     except Produit.DoesNotExist:
@@ -371,7 +370,7 @@ def change_product_barcode(request, gerant):
         product = Produit.objects.get(id_prod=product_id)
         products = Produit.objects.filter(code_bar=barcode)
         if products:
-            return JsonResponse({'status': 'error', 'message': f'{barcode} déjà utilisé pour {products[0].nom}'},
+            return JsonResponse({'status': 'error', 'message': _(INVALID_CODE_BAR)},
                                 status=200)
         product.code_bar = barcode
         product.save()

@@ -9,6 +9,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle, 
 
 
 class CommandeTotale(models.Model):
+    """Model for the total command"""
     id_commande = models.AutoField(primary_key=True)
     gerant = models.ForeignKey('direction.Gerant', on_delete=models.CASCADE)
     client = models.ForeignKey('direction.Client', on_delete=models.CASCADE, null=True)
@@ -22,6 +23,7 @@ class CommandeTotale(models.Model):
 
 
 class CommandeProduit(models.Model):
+    """Model for the command product"""
     prod = models.ForeignKey('gestion.Produit', on_delete=models.CASCADE)
     commande = models.ForeignKey('CommandeTotale', on_delete=models.CASCADE)
     prix = models.DecimalField(max_digits=10, decimal_places=2)
@@ -33,13 +35,13 @@ class CommandeProduit(models.Model):
 
 
 class Commande:
+    """Class for the command with the products"""
     def __init__(self, command_total: CommandeTotale):
         self.id = command_total.id_commande
         self.gerant = command_total.gerant.nom
         self.site = command_total.gerant.site.nom if command_total.gerant.site else "Inconnu"
         self.client = command_total.client.nom if command_total.client else 'Inconnu'
         self.date = command_total.date
-        # Changer la date sous le format 'JJ/MM/AAAA à HH:MM:SS'
         self.formated_date = self.date.strftime('%d/%m/%Y %H:%M')
         self.methode_paiement = command_total.methode_paiement.nom
         self.products = search(CommandeProduit, 'commande', command_total, True)
@@ -47,6 +49,9 @@ class Commande:
         self.total = sum([product.prix * product.qte for product in self.products if not product.est_cadeau])
 
     def receipt(self, response):
+        """Generate a receipt for the command
+        :param response: The response to write the pdf to
+        """
         doc = SimpleDocTemplate(response, pagesize=A5, rightMargin=20, leftMargin=20, topMargin=20, bottomMargin=20)
         styles = getSampleStyleSheet()
 
@@ -64,8 +69,6 @@ class Commande:
             alignment=2  # 2 is for right alignment
         )
         elements = [Paragraph("Facture Client", styles['Title']), Spacer(1, 24)]
-
-        # Receipt Details
         details = [
             f"Numéro commande: {self.id}",
             f"Validé par: {self.gerant}",
@@ -82,8 +85,6 @@ class Commande:
             elements.append(Spacer(1, 3))
 
         elements.append(Spacer(1, 12))
-
-        # Products Table
         data = [["Produit", "P.U.", "Qte", "P.T."]]
         currency = Parametre.get_value(Parametre.CURRENCY).valeur
         if not currency:
@@ -95,20 +96,15 @@ class Commande:
                 product.qte,
                 f"{(product.prix * product.qte):.0f} {currency}" if not product.est_cadeau else f"0 {currency} (Offert)",
             ])
-
         left_margin = 20
         right_margin = 20
-
-        # Largeur disponible pour le tableau
         table_width = A5[0] - (left_margin + right_margin)
-
         col_widths = [
             0.4 * table_width,
             0.2 * table_width,
             0.1 * table_width,
             0.3 * table_width
         ]
-
         table = Table(data, colWidths=col_widths)
         table.setStyle(TableStyle([
             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
@@ -126,15 +122,9 @@ class Commande:
         ]))
         elements.append(table)
         elements.append(Spacer(1, 12))
-
-        # Total
         elements.append(Paragraph(f"Total: {self.total} {currency}", arial_bold_right))
-
-        # Comment
         if self.comment:
             elements.append(Spacer(1, 12))
             elements.append(Paragraph(f"Commentaire: {self.comment}", ParagraphStyle(name="Italic", parent=arial,
                                                                                         fontName="Helvetica-Oblique")))
-
-        # Génération du PDF
         doc.build(elements)

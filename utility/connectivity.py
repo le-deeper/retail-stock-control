@@ -40,6 +40,7 @@ def connection(username, password):
 
 
 def logged_in(level=SIMPLE_LEVEL):
+    """Decorator to check if a user is logged in and has the right level"""
     def decorator(func):
         @wraps(func)
         def wrapper(request, *args, **kwargs):
@@ -57,6 +58,7 @@ def logged_in(level=SIMPLE_LEVEL):
 
 
 def unique_method(method):
+    """Decorator to check if the request method is the one expected"""
     def decorator(func):
         @wraps(func)
         def wrapper(request, *args, **kwargs):

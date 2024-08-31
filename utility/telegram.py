@@ -8,11 +8,7 @@ TELEGRAM_FORMAT = "*{title}*: {description} le _{date}_"
 
 def send_message(bot_token, chat_id, message):
     """
-    Envoie un message à un utilisateur via l'API Telegram.
-
-    :param bot_token: Le token d'authentification du bot Telegram
-    :param chat_id: L'ID du chat de l'utilisateur
-    :param message: Le message à envoyer
+    Send a message to a chat using the Telegram API.
     """
     try:
         # URL de l'API Telegram pour envoyer un message
@@ -29,15 +25,13 @@ def send_message(bot_token, chat_id, message):
         response = requests.post(url, data=payload)
 
         return response
-    except Exception as e:
+    except Exception:
         pass
 
 
 def send_message_to_admin(message):
     """
-    Envoie un message à l'administrateur via l'API Telegram.
-
-    :param message: Le message à envoyer
+    Send a message to the admin using the Telegram API.
     """
     # Récupérer les paramètres de l'application
     bot_token = Parametre.get_value(Parametre.BOT_TOKEN)

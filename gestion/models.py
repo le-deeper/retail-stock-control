@@ -8,6 +8,7 @@ from utility.search_engine import search
 
 # Create your models here.
 class Stock(models.Model):
+    """product quantity in a site"""
     id_stock = models.AutoField(primary_key=True)
     prod = models.ForeignKey('Produit', on_delete=models.CASCADE)
     site = models.ForeignKey('direction.Site', on_delete=models.CASCADE, null=True)
@@ -18,6 +19,7 @@ class Stock(models.Model):
 
 
 class Categorie(models.Model):
+    """product category"""
     id_categ = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
 
@@ -26,6 +28,7 @@ class Categorie(models.Model):
 
 
 class MethodePaiement(models.Model):
+    """payment method"""
     id_paiement = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
 
@@ -34,6 +37,7 @@ class MethodePaiement(models.Model):
 
 
 class Produit(models.Model):
+    """Model for a product"""
     id_prod = models.AutoField(primary_key=True)
     image = models.ImageField(upload_to='prodcuts_images/')
     image_url = models.URLField(max_length=200)
@@ -45,8 +49,6 @@ class Produit(models.Model):
     stock_urgence = models.IntegerField(default=0)
 
     def clean(self):
-        if not self.image and not self.image_url:
-            raise ValidationError("Image or Image URL is required.")
         if self.image and self.image_url:
             raise ValidationError("You can't have both an image and an image URL.")
 
@@ -55,6 +57,12 @@ class Produit(models.Model):
 
     @staticmethod
     def products_to_dict(products, site, include_prix_achat=False, eco_mode=False):
+        """get a list of products and return a list of dictionaries with the product's information
+        :param products: list of products
+        :param site: the site where the stock is located
+        :param include_prix_achat: if True, include the purchase price of the product
+        :param eco_mode: if True, don't include the product image
+        :return: a list of dictionaries with the product's information"""
         products_dict = []
         for product in products:
             qte = 'Inconnu'
@@ -79,6 +87,7 @@ class Produit(models.Model):
 
 
 class Approvisionnement(models.Model):
+    """Model for a product purchase (supply)"""
     id_appro = models.AutoField(primary_key=True)
     date_achat = models.DateTimeField(auto_now_add=True)
     qte = models.IntegerField()
@@ -93,6 +102,7 @@ class Approvisionnement(models.Model):
 
 
 class Paiement(models.Model):
+    """Model for a payment deadline"""
     CLIENT = 1
     FOUR = 2
     id_paiement = models.AutoField(primary_key=True)
@@ -107,6 +117,7 @@ class Paiement(models.Model):
     def save(
             self, *args, **kwargs
     ):
+        # Set the total amount of the payment
         if self.destinataire == self.CLIENT:
             products = search(CommandeProduit, "commande", self.commande, True)
             self.total = sum([product.prix * product.qte for product in products if not product.est_cadeau])
@@ -115,6 +126,7 @@ class Paiement(models.Model):
         super(Paiement, self).save(*args, **kwargs)
 
     def clean(self):
+        # Check if the payment respects the constraints
         if self.destinataire == self.CLIENT and not self.commande:
             raise ValidationError("Une commande est nécessaire pour l'échéance d'un client")
         elif self.destinataire == self.FOUR and not self.approvisionnement:
@@ -128,6 +140,7 @@ class Paiement(models.Model):
 
 
 class VerificationStock(models.Model):
+    """Model for a stock verification"""
     id_verif = models.AutoField(primary_key=True)
     date_verif = models.DateTimeField(auto_now_add=True)
     gerant = models.ForeignKey('direction.Gerant', on_delete=models.CASCADE)

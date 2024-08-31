@@ -70,6 +70,9 @@ Web application to manage stock, orders and supplies for a retail business.
 ### Actions Translations
 > The actions sent to the manager can be translated into the current language.
 
+### Tests
+> Add tests to the application.
+
 ## Settings
 - __*bot_token*__: telegram bot token
 - __*chat_id*__: id of the conversation to which to send manager actions

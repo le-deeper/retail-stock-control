@@ -7,6 +7,7 @@ SUPER_ADMIN_LEVEL = 3
 
 
 def get_manager_level(manager):
+    """get the level of a manager"""
     if manager.est_super_admin:
         return SUPER_ADMIN_LEVEL
     if manager.est_admin:
@@ -15,6 +16,7 @@ def get_manager_level(manager):
 
 
 def get_manager_site(manager, request):
+    """get the site of a manager"""
     if manager.est_super_admin:
         site = request.COOKIES.get('site', None)
         if site and site != "none":

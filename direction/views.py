@@ -12,7 +12,8 @@ from utility.stats import *
 import json
 
 
-def get_date_start_date_end(request):
+def get_date_start_date_end(request) -> tuple:
+    """Extract the start and end date from the request"""
     data = json.loads(request.body)
     year_start = int(data.get('year_start'))
     month_start = int(data.get('month_start'))
@@ -23,12 +24,13 @@ def get_date_start_date_end(request):
     return year_start, month_start, day_start, year_end, month_end, day_end
 
 
-def get_orders_between_dates(request, gerant):
+def get_orders_between_dates(request, gerant) -> list:
+    """Get the orders between the start and end date from the request"""
     year_start, month_start, day_start, year_end, month_end, day_end = get_date_start_date_end(request)
-    start_date = make_aware(datetime(year_start, month_start, day_start))
+    start_date = make_aware(datetime(year_start, month_start, day_start)) # Convert the date to a timezone aware date
     end_date = make_aware(datetime(year_end, month_end, day_end))
     site = get_manager_site(gerant, request)
-    # Récupérer les commandes
+    # Get the commands between the start and end date
     commands_total = CommandeTotale.objects.filter(date__range=(start_date, end_date))
     if site:
         commands_total = commands_total.filter(gerant__site=site)
@@ -49,7 +51,6 @@ def go_to_analysis(request, gerant):
 @logged_in(level=ADMIN_LEVEL)
 def get_sales_perfs(request, gerant):
     commands = get_orders_between_dates(request, gerant)
-    # Calculer les performances
     sales = sales_performance(commands)
     return JsonResponse({'result': sales})
 
@@ -58,7 +59,6 @@ def get_sales_perfs(request, gerant):
 @logged_in(level=ADMIN_LEVEL)
 def get_sales_perfs_chart(request, gerant):
     commands = get_orders_between_dates(request, gerant)
-    # Calculer les performances
     sales = sales_performance_chart(commands)
     return JsonResponse({'result': sales})
 
@@ -67,7 +67,6 @@ def get_sales_perfs_chart(request, gerant):
 @logged_in(level=ADMIN_LEVEL)
 def get_sales_per_method_chart(request, gerant):
     commands = get_orders_between_dates(request, gerant)
-    # Calculer les performances
     sales = sales_performance_per_method_chart(commands)
     return JsonResponse({'result': sales})
 
@@ -76,7 +75,6 @@ def get_sales_per_method_chart(request, gerant):
 @logged_in(level=SUPER_ADMIN_LEVEL)
 def get_revenue(request, gerant):
     commands = get_orders_between_dates(request, gerant)
-    # Calculer les revenus
     rev = revenue(commands)
     return JsonResponse({'result': rev})
 
@@ -85,7 +83,6 @@ def get_revenue(request, gerant):
 @logged_in(level=SUPER_ADMIN_LEVEL)
 def get_revenue_chart(request, gerant):
     commands = get_orders_between_dates(request, gerant)
-    # Calculer les revenus
     rev = revenue_chart(commands)
     return JsonResponse({'result': rev})
 

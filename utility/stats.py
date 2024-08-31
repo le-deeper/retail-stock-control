@@ -2,6 +2,10 @@ from datetime import datetime
 
 
 def performances(commands, func):
+    """Calculate the total sales of the commands
+    :param commands: list of commands
+    :param func: function to apply to each command
+    :return: the total sales of the commands"""
     sales = 0
     for command in commands:
         sales += func(command)
@@ -9,6 +13,11 @@ def performances(commands, func):
 
 
 def performances_chart(commands, func):
+    """Calculate the total sales of the commands
+    :param commands: list of commands
+    :param func: function to apply to each command
+    :return: a dictionary with the total sales per day, month"""
+
     perfs = {}
     for command in commands:
         command.date: datetime

@@ -3,6 +3,7 @@ from django.db import models
 
 
 def get_key(key, query, pair_separator=',', key_separator='-'):
+    """get the value of a key in a query"""
     keys = query.split(pair_separator)
     value = None
     for k in keys:
@@ -14,6 +15,7 @@ def get_key(key, query, pair_separator=',', key_separator='-'):
 
 
 def get_date(keys):
+    """get the date from a list of keys"""
     day, month, year, hour, minute = None, None, None, None, None
     for key in keys:
         possible_time = ""
@@ -39,12 +41,14 @@ def get_date(keys):
 
 
 def search(model, field, query, exact=False) -> List[models.Model]:
+    """Search for a model with a field"""
     precision = "" if exact else "__icontains"
     return model.objects.filter(**{field + precision: query})
 
 
 def search_commands(query: str,
                     by_client, by_date, by_payment, by_manager) -> List[Tuple[str, object]]:
+    """Search for commands with multiple filters"""
     filters = []
     if by_client:
         client = get_key("client", query)
@@ -79,6 +83,7 @@ def search_commands(query: str,
 
 def search_supplies(query: str,
                     by_product, by_date, by_four, by_manager) -> List[Tuple[str, object]]:
+    """Search for supplies with multiple filters"""
     filters = []
     if by_date:
         keys = query.split(',')
