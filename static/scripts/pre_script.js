@@ -55,7 +55,6 @@ const set_choice = (elt, updateTotal, ...changes) => {
     prnt = elt.parentElement.parentElement
     product_search = prnt.querySelector(".product-search")
     if (product_search !== null) product_search.classList.remove('red-color')
-    console.log(prnt)
     for (let i = 0; i < changes.length; i+=2) {
         if (prnt.getElementsByClassName(changes[i]).length > 0) {
             let value = changes[i+1]

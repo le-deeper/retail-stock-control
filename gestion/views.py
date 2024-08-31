@@ -116,7 +116,6 @@ def search_barcode(request, gerant):
     if not s:
         return JsonResponse({'status': 'error', 'message': _(INVALID_CODE_BAR)}, status=200)
     produits = search_engine(Produit, 'code_bar', int(s), True)
-    print(f"Produits: {produits} pour le code barre {s}")
     if produits:
         return JsonResponse(Produit.products_to_dict(produits, site, include_prix_achat=gerant.est_admin or
                                                                                         gerant.est_super_admin),
@@ -364,7 +363,6 @@ def change_product_barcode(request, gerant):
         data = json.loads(request.body)
         product_id = data.get('code')
         barcode = data.get('barcode')
-        print(f"code barre: {barcode}")
         barcode = int(barcode)
 
         if not product_id or not barcode:

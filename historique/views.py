@@ -36,7 +36,6 @@ def get_order_history(request, gerant):
         commands_total = CommandeTotale.objects.all()
         if site:
             commands_total.filter(gerant__site=site)
-        print({field: value for field, value in filtered_commands})
         commands_total = (commands_total.filter(**{field: value for field, value in filtered_commands})
                           .order_by('-date'))
         commands_total = [Commande(cmd) for cmd in commands_total]

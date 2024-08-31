@@ -28,14 +28,9 @@ def send_message(bot_token, chat_id, message):
         # Envoyer la requête POST
         response = requests.post(url, data=payload)
 
-        # Vérifier la réponse
-        if response.status_code == 200:
-            logging.debug("Message envoyé avec succès!")
-        else:
-            logging.debug(f"Erreur lors de l'envoi du message: {response.status_code}")
-            logging.debug(response.json())
+        return response
     except Exception as e:
-        logging.error(f"Erreur lors de l'envoi du message: {e}")
+        pass
 
 
 def send_message_to_admin(message):
