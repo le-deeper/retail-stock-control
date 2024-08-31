@@ -35,12 +35,8 @@ class Gerant(models.Model):
 
 
 class Parametre(models.Model):
-    BOT_TOKEN = 1
-    CHAT_ID = 2
-    CURRENCY = 3
-    PHONE_NUMBER = 4
-    ECO_MODE = 5
-    IMAGE_PATH = 6
+    BOT_TOKEN, CHAT_ID, CURRENCY, PHONE_NUMBER, ECO_MODE, IMAGE_PATH, TOTAL_TOLERANCE = range(1, 8)
+
     KEYS = {
         BOT_TOKEN: 'bot_token',
         CHAT_ID: 'chat_id',
@@ -48,6 +44,7 @@ class Parametre(models.Model):
         PHONE_NUMBER: 'phone_number',
         ECO_MODE: 'eco_mode',
         IMAGE_PATH: 'image_path',
+        TOTAL_TOLERANCE: 'total_tolerance'
     }
     nom = models.IntegerField(primary_key=True,
                               choices=[(k, v) for k, v in KEYS.items()])

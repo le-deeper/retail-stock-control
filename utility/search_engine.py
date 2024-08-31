@@ -29,7 +29,7 @@ def get_date(keys):
                 else:
                     year = int(date[2])
         if ':' in possible_time:
-            time = [x.strip() for x in possible_time.split(':')]
+            time = [x.strip() for x in possible_time.split(':') if x != ""]
             if len(time) == 1:
                 hour = int(time[0])
             elif len(time) == 2:
@@ -69,7 +69,7 @@ def search_commands(query: str,
     if by_payment:
         paiement = get_key("paiement", query)
         if paiement:
-            filters.append(("paiement__nom__contains", paiement))
+            filters.append(("methode_paiement__nom__contains", paiement))
     if by_manager:
         manager = get_key("gerant", query)
         if manager:

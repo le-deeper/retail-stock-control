@@ -163,7 +163,8 @@ def submit_order(request, gerant):
             prod = search_engine(Produit, 'id_prod', product_code)[0]
             prod: Produit
             if prod.prix_vente > float(price):
-                create_selling_under_price_action(gerant, prod, price).save()
+                action = create_selling_under_price_action(gerant, prod, price)
+                action.save()
                 send_message_to_admin(TELEGRAM_FORMAT.format(title=action.gerant.nom, description=action.action,
                                                              date=action.date.strftime('%d/%m/%Y à %H:%M')))
             product_command = CommandeProduit(prod=prod,

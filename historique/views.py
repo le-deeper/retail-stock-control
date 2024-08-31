@@ -22,45 +22,48 @@ from utility.search_engine import search_commands, get_key, search_supplies
 def get_order_history(request, gerant):
     site = get_manager_site(gerant, request)
     if request.method == 'POST':
-        try:
-            query = request.POST.get('query', '')
-            by_client = request.POST.get('by_client') == 'on'
-            by_date = request.POST.get('by_date') == 'on'
-            by_method = request.POST.get('by_method') == 'on'
-            by_total = request.POST.get('by_total') == 'on'
-            by_products = request.POST.get('by_products') == 'on'
-            by_gerant = request.POST.get('by_gerant') == 'on'
+        query = request.POST.get('query', '')
+        by_client = request.POST.get('by_client') == 'on'
+        by_date = request.POST.get('by_date') == 'on'
+        by_method = request.POST.get('by_method') == 'on'
+        by_total = request.POST.get('by_total') == 'on'
+        by_products = request.POST.get('by_products') == 'on'
+        by_gerant = request.POST.get('by_gerant') == 'on'
 
-            filtered_commands = search_commands(query, by_client, by_date, by_method, by_gerant)
-            if not filtered_commands and not by_total and not by_products:
-                messages.error(request, _(BAD_SEARCH))
-            commands_total = CommandeTotale.objects.all()
-            if site:
-                commands_total.filter(gerant__site=site)
-            for field, value in filtered_commands:
-                commands_total = commands_total.filter(**{field: value})
-            commands_total = commands_total.order_by('-date')
-            commands_total = [Commande(cmd) for cmd in commands_total]
-            commands = []
-            if by_total:
-                total = float(get_key('total', query))
-                for command in commands_total:
-                    produit = get_key('produit', query)
-                    if (total - 50 <= command.total <= total + 50 and
-                            (produit in [product.prod.nom for product in command.products]
-                                if (by_products and produit) else True)):
-                        commands.append(command)
-            else:
-                commands = commands_total
-            return render(request, 'order_history.html', {'query': query, 'commands': commands,
-                                                          'gerant': gerant,
-                                                          'by_client': by_client, 'by_date': by_date,
-                                                          'by_method': by_method, 'by_total': by_total,
-                                                          'by_products': by_products, 'by_gerant': by_gerant,
-                                                          "sites": Site.objects.all() if gerant.est_super_admin else []}
-                          )
-        except Exception:
+        filtered_commands = search_commands(query, by_client, by_date, by_method, by_gerant)
+        if not filtered_commands and not by_total and not by_products:
             messages.error(request, _(BAD_SEARCH))
+        commands_total = CommandeTotale.objects.all()
+        if site:
+            commands_total.filter(gerant__site=site)
+        print({field: value for field, value in filtered_commands})
+        commands_total = (commands_total.filter(**{field: value for field, value in filtered_commands})
+                          .order_by('-date'))
+        commands_total = [Commande(cmd) for cmd in commands_total]
+        commands = []
+        if by_total:
+            try:
+                total = float(get_key('total', query))
+                produit = get_key('produit', query)
+                tolerance = Parametre.get_value(Parametre.TOTAL_TOLERANCE)
+                tolerance = float(tolerance.valeur) if tolerance else 0
+                for command in commands_total:
+                    if (total - tolerance <= command.total <= total + tolerance and
+                            (produit in [product.prod.nom for product in command.products]
+                            if (by_products and produit) else True)):
+                        commands.append(command)
+            except ValueError:
+                messages.error(request, _(BAD_SEARCH))
+        else:
+            commands = commands_total
+        return render(request, 'order_history.html', {'query': query, 'commands': commands,
+                                                      'gerant': gerant,
+                                                      'by_client': by_client, 'by_date': by_date,
+                                                      'by_method': by_method, 'by_total': by_total,
+                                                      'by_products': by_products, 'by_gerant': by_gerant,
+                                                      "sites": Site.objects.all() if gerant.est_super_admin else []}
+                      )
+
     commands_total = CommandeTotale.objects.all().order_by('-date')
     if site:
         commands_total = commands_total.filter(gerant__site=site)
@@ -122,29 +125,24 @@ def download_order(request, order_id, gerant):
 def get_supplying_history(request, gerant):
     site = get_manager_site(gerant, request)
     if request.method == 'POST':
-        try:
-            query = request.POST.get('query', '')
-            by_date = request.POST.get('by_date') == 'on'
-            by_product = request.POST.get('by_product') == 'on'
-            by_gerant = request.POST.get('by_gerant') == 'on'
-            by_four = request.POST.get('by_four') == 'on'
+        query = request.POST.get('query', '')
+        by_date = request.POST.get('by_date') == 'on'
+        by_product = request.POST.get('by_product') == 'on'
+        by_gerant = request.POST.get('by_gerant') == 'on'
+        by_four = request.POST.get('by_four') == 'on'
 
-            filters = search_supplies(query, by_product, by_date, by_four, by_gerant)
-            supplies = Approvisionnement.objects.all()
-            if site:
-                supplies = supplies.filter(site=site)
-            for field, value in filters:
-                supplies = supplies.filter(**{field: value})
-            return render(request, 'supplying_history.html', {'query': query, 'supplies': supplies,
-                                                              'gerant': gerant,
-                                                              'by_four': by_four, 'by_date': by_date,
-                                                              'by_product': by_product, 'by_gerant': by_gerant,
-                                                              "sites": Site.objects.all() if gerant.est_super_admin
-                                                              else [],
-                                                              "settings": Parametre.parametre_to_dict()})
-        except Exception as e:
-            logging.error(e)
-            messages.error(request, _(BAD_SEARCH))
+        filters = search_supplies(query, by_product, by_date, by_four, by_gerant)
+        supplies = Approvisionnement.objects.all()
+        if site:
+            supplies = supplies.filter(site=site)
+        supplies = supplies.filter(**{field: value for field, value in filters}).order_by('-date_achat')
+        return render(request, 'supplying_history.html', {'query': query, 'supplies': supplies,
+                                                          'gerant': gerant,
+                                                          'by_four': by_four, 'by_date': by_date,
+                                                          'by_product': by_product, 'by_gerant': by_gerant,
+                                                          "sites": Site.objects.all() if gerant.est_super_admin
+                                                          else [],
+                                                          "settings": Parametre.parametre_to_dict()})
     supplying = Approvisionnement.objects.all()
     if site:
         supplying = supplying.filter(site=site)
