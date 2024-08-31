@@ -34,7 +34,7 @@
             <div class="form-row hidden" id="paiement-container">
                 <input type="text" id="client-name" placeholder="{% trans 'Nom du client' %}">
                 <select id="paiement">
-                    <<option value="">{% trans 'Sélectionner une méthode de paiement' %}</option>
+                    <<option value="none">{% trans 'Sélectionner une méthode de paiement' %}</option>
                     {% for paiement in paiements %}
                         <option value="{{ paiement.id_paiement }}">{{ paiement.nom }}</option>
                     {% endfor %}
@@ -46,7 +46,7 @@
             </div>
             <div id="command-total" class="hidden">Total: 0 {{ settings.currency }}</div>
             <div class="buttons-line hidden" id="new-command-btns">
-                <button id="add-order-btn" class="second-button" onclick="add_new_product()">{% trans "Ajouter" %}</button>
+                <button id="add-order-btn" class="second-button" onclick="addNewProductOrder()">{% trans "Ajouter" %}</button>
                 <button id="save-order-btn" onclick="sendOrder(this.parentElement.parentElement)" class="normal-action">{% trans "Enregistrer" %}</button>
             </div>
         </article>
@@ -89,7 +89,7 @@
                     <input type="text" id="product-image-url" placeholder="{% trans "URL de l'image" %}">
                 </div>
                 <div class="buttons-line">
-                    <button id="save-product-btn" class="normal-action" onclick="saveNewProduct()">{% trans "Enregistrer" %}</button>
+                    <button id="save-product-btn" class="normal-action" onclick="saveNewProduct(this.parentElement.parentElement)">{% trans "Enregistrer" %}</button>
                 </div>
             </div>
         {% endif %}
@@ -114,7 +114,7 @@
                 <div id="search-results" class="search-results hidden"></div>
             </div>
             <div class="buttons-line">
-                <button id="supply-product-btn" class="second-button" onclick="supplyProduct()">{% trans "Approvisionner" %}</button>
+                <button id="supply-product-btn" class="second-button" onclick="supplyProduct(this.parentElement.parentElement)">{% trans "Approvisionner" %}</button>
             </div>
         </div>
         {% if gerant.est_super_admin or gerant.est_admin %}
@@ -132,7 +132,7 @@
                     <div id="search-results" class="search-results hidden"></div>
                 </div>
                 <div class="buttons-line">
-                    <button id="modify-product-btn" class="red-button" onclick="changeProductPrice()">{% trans "Modifier" %}</button>
+                    <button id="modify-product-btn" class="red-button" onclick="changeProductPrice(this.parentElement.parentElement)">{% trans "Modifier" %}</button>
                 </div>
             </div>
         {% endif %}
@@ -147,7 +147,7 @@
                     <div id="search-results" class="search-results hidden"></div>
                 </div>
                 <div class="buttons-line">
-                    <button id="delete-product-btn" class="red-button" onclick="deleteProduct()">{% trans "Supprimer" %}</button>
+                    <button id="delete-product-btn" class="red-button" onclick="deleteProduct(this.parentElement.parentElement)">{% trans "Supprimer" %}</button>
                 </div>
 
             </div>
@@ -169,7 +169,7 @@
                 </div>
             </div>
             <div class="buttons-line">
-                <button id="change-product-barcode-btn" class="red-button" onclick="changerProductBarcode()">Changer</button>
+                <button id="change-product-barcode-btn" class="red-button" onclick="changerProductBarcode(this.parentElement.parentElement)">Changer</button>
             </div>
 
         </div>

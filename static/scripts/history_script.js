@@ -32,7 +32,6 @@ const cancelModifications = (order) => {
 }
 
 const saveModifications = async (order) => {
-    display_hide("loading", "main-loading")
     const products = [];
     const productDivs = order.querySelectorAll('.command-product');
 
@@ -52,25 +51,10 @@ const saveModifications = async (order) => {
         });
     }
 
-    try {
-        const response = await fetch('/edit_order/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({
-                order: order.getElementsByClassName('command-id')[0].value,
-                products: products,
-            })
-        });
-
-        const responseData = await response.json();
-        display_hide("loading", "main-loading")
-        showPopup(responseData.message, responseData.status === 'error');
-        location.reload();
-    } catch (error) {
-        console.error('Failed to submit order:', error);
-        display_hide("loading", "main-loading")
-    }
+    sendRequest('/edit_order/', { order: order.getElementsByClassName('command-id')[0].value,
+        products: products }, 'main-loading', 'POST').then(
+        data => {
+            if (data.status !== 'error') location.reload();
+        }
+    )
 }

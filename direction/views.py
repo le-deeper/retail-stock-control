@@ -9,15 +9,17 @@ from utility.connectivity import logged_in, unique_method
 from utility.manager_informations import get_manager_site, ADMIN_LEVEL, SUPER_ADMIN_LEVEL
 from utility.search_engine import search
 from utility.stats import *
+import json
 
 
 def get_date_start_date_end(request):
-    year_start = int(request.POST['year_start'])
-    month_start = int(request.POST['month_start'])
-    day_start = int(request.POST['day_start'])
-    year_end = int(request.POST['year_end'])
-    month_end = int(request.POST['month_end'])
-    day_end = int(request.POST['day_end'])
+    data = json.loads(request.body)
+    year_start = int(data.get('year_start'))
+    month_start = int(data.get('month_start'))
+    day_start = int(data.get('day_start'))
+    year_end = int(data.get('year_end'))
+    month_end = int(data.get('month_end'))
+    day_end = int(data.get('day_end'))
     return year_start, month_start, day_start, year_end, month_end, day_end
 
 
@@ -107,7 +109,8 @@ def get_products_total(request, gerant):
 @unique_method('POST')
 @logged_in(level=ADMIN_LEVEL)
 def get_product_total(request, gerant):
-    porduct_id = int(request.POST['product_id'])
+    data = json.loads(request.body)
+    porduct_id = int(data.get('product_id'))
     product = search(Produit, 'id_prod', porduct_id, True)[0]
     commands = get_orders_between_dates(request, gerant)
     product_result = total_saled_product(product.id_prod, commands)

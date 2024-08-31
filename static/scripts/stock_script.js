@@ -19,7 +19,7 @@ const init = () => {
 }
 
 const searchProducts = async () => {
-    display_hide('loading', 'main-loading')
+    await display_hide('loading', 'main-loading')
     const search = document.getElementById('search').value
     // Rechercher dans la liste des produits le produit ayant dans son nom la chaine de caractère recherchée peu importe la casse
     const results = products_names.filter(prod => prod.name.toLowerCase().includes(search.toLowerCase()))
@@ -42,11 +42,11 @@ const searchProducts = async () => {
             `
             document.getElementById('products').appendChild(product_div)
         }
-        display_hide('loading', 'main-loading')
+        await display_hide('loading', 'main-loading')
     }
     else {
         document.getElementById('no-product-found').classList.remove('hidden')
-        display_hide('loading', 'main-loading')
+        await display_hide('loading', 'main-loading')
     }
 }
 
@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
     init();
 })
 
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', async function(event) {
     if (event.key === 'Enter') {
-        searchProducts();
+        await searchProducts();
     }
 });

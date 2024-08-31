@@ -7,23 +7,48 @@ const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet'
 const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
 let chartsInstances = {}
 
-const calcul_total = () => {
-    const products = document.getElementById("new-command").getElementsByClassName('product-command');
-    let total = 0;
-    for (let product of products) {
-        const product_exist = product.getElementsByClassName('product-code')[0].value > 0;
-        if (!product_exist) {
-            continue;
+const checkInputs = (...inputValues) => {
+    for (let value of inputValues) {
+        if (!value) {
+            showPopup('Veuillez remplir tous les champs', true);
+            return false;
         }
-        if (product.getElementsByClassName('isGift')[0].checked) {
-            continue
-        }
-        const quantity = product.getElementsByClassName('quantity')[0].value;
-        const price = product.getElementsByClassName('price')[0].value;
-        total += (quantity * price);
-
     }
-    document.getElementById('command-total').innerText = `Total: ${total} ${currency}`;
+    return true;
+}
+
+async function sendRequest(url, data, loading=null, method='POST') {
+    if (loading !== null) await display_hide("loading", loading)
+    url = url.endsWith('/') ? url : url + '/';
+    let post = {}
+    if (method === 'GET') {
+        url += '?';
+        for (let key in data) {
+            url += `${key}=${data[key]}&`;
+        }
+        url = url.slice(0, -1);
+    }
+    else {
+         post = {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(data)
+        }
+    }
+    try {
+        const response = await fetch(url, post);
+
+        const responseData = await response.json();
+        if (loading !== null) await display_hide("loading", loading)
+        if (responseData.message) showPopup(responseData.message, responseData.status === 'error');
+        return responseData;
+    } catch (error) {
+        await display_hide("loading", "main-loading")
+        if (loading !== null) await display_hide("loading", loading)
+    }
 }
 
 const set_choice = (elt, updateTotal, ...changes) => {
@@ -55,20 +80,11 @@ const search = (elt, target=null, updateTotal=false, isQtyNeeded=true) => {
     else resultsContainer = document.getElementById(target);
 
     if (query.length > 0) {
-        // Simulate search results
-        // const results = ['Produit 1', 'Produit 2', 'Produit 3'].filter(p => p.toLowerCase().includes(query.toLowerCase()));
-        // faire une requête post à l'adresse search/ avec comme paramètre q = query
-        fetch(`/search/?q=${query}&qty=${isQtyNeeded ? 1 : 0}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'error') {
-                    showPopup(data.message, true)
-                    return
-                }
-                let results = ""
-                for (let prod of data) {
-                    prix_achat = `${prod.prix_achat} ${currency}` ? prod.prix_achat : ""
-                    results += `
+        sendRequest('/search/', {q: query, qty: isQtyNeeded ? 1 : 0}, null, 'GET').then(data => {
+            let results = ""
+            for (let prod of data) {
+                const prix_achat = `${prod.prix_achat} ${currency}` ? prod.prix_achat : ""
+                results += `
                     <div class="result" onclick='set_choice(this, ${updateTotal}, "product-code", ${prod.code}, "product-search", "${prod.nom.split('\'').join('%a')}", "price", ${prod.prix}, "quantity", 1)'>
                         <div>
                             <img src="${prod.image}" alt="">
@@ -76,12 +92,11 @@ const search = (elt, target=null, updateTotal=false, isQtyNeeded=true) => {
                         <h3 class="result-title">${prod.nom} - ${prod.prix } ${currency} - ${prod.qte} unités - ${prix_achat} ${currency}</h3>
                     </div>
                     `
-                }
-                resultsContainer.innerHTML = results
-                resultsContainer.classList.remove('hidden');
-            })
-
-        // add_search_reaction()
+            }
+            if (results === "") results = "<p class='error-text'>Aucun résultat</p>"
+            resultsContainer.innerHTML = results
+            resultsContainer.classList.remove('hidden');
+        })
     } else {
         resultsContainer.classList.add('hidden');
     }
@@ -89,20 +104,11 @@ const search = (elt, target=null, updateTotal=false, isQtyNeeded=true) => {
 
 const searchByBarcode = (elt, barcode, updateTotal=true) => {
 
-    // Simulate search results
-    // const results = ['Produit 1', 'Produit 2', 'Produit 3'].filter(p => p.toLowerCase().includes(query.toLowerCase()));
-    // faire une requête post à l'adresse search/ avec comme paramètre q = query
-    fetch(`/search_barcode/?q=${barcode}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'error') {
-                showPopup(data.message, true)
-                return
-            }
-            prod = data[0]
-            set_choice(elt, updateTotal, "product-code", prod.code, "product-search", prod.nom, "price",
-                prod.prix, "quantity", 1)
-        })
+    sendRequest('search_barcode/', {q: barcode}, null, 'GET').then(data => {
+        prod = data[0]
+        set_choice(elt, updateTotal, "product-code", prod.code, "product-search", prod.nom, "price",
+            prod.prix, "quantity", 1)
+    });
 };
 
 function scanBarcode(elt, callback) {
@@ -210,11 +216,13 @@ const displayChart = (idCanvas, data, labels, title, type='line') => {
 const setTodayDate = (startDateInput, endDateOutput) => {
     const today = new Date();
     const today_month = today.getMonth() / 10 < 1 ? `0${today.getMonth() + 1}` : today.getMonth() + 1;
-    const todayStr = `${today.getFullYear()}-${today_month}-${today.getDate()}`;
+    const today_day = today.getDate() / 10 < 1 ? `0${today.getDate()}` : today.getDate();
+    const todayStr = `${today.getFullYear()}-${today_month}-${today_day}`;
     document.getElementById(startDateInput).value = todayStr;
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow_month = tomorrow.getMonth()/10 < 1 ? `0${tomorrow.getMonth() + 1}` : tomorrow.getMonth() + 1;
-    const tomorrowStr = `${tomorrow.getFullYear()}-${tomorrow_month}-${tomorrow.getDate()}`;
+    tomorrow_month = tomorrow.getMonth() / 10 < 1 ? `0${tomorrow.getMonth() + 1}` : tomorrow.getMonth() + 1;
+    tomorrow_day = tomorrow.getDate() / 10 < 1 ? `0${tomorrow.getDate()}` : tomorrow.getDate();
+    const tomorrowStr = `${tomorrow.getFullYear()}-${tomorrow_month}-${tomorrow_day}`;
     document.getElementById(endDateOutput).value = tomorrowStr;
 }

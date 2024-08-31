@@ -13,23 +13,13 @@ const startButtonAction = (elt) => {
 }
 
 function sendVerification() {
-    const url = '/stock_validation/';
-
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: JSON.stringify(productsProblems)
-    })
-        .then(response => response.json())
-        .then(data => {
-            showPopup(data.message, false)
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+    sendRequest('/stock_validation/', {products: productsProblems}, null, 'POST').then(
+        data => {
+            if (data.status !== 'error') {
+                location.reload();
+            }
+        }
+    )
 }
 
 function signalProduct(elt) {

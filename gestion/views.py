@@ -259,7 +259,7 @@ def edit_order(request, gerant):
 @logged_in(level=ADMIN_LEVEL)
 def add_product(request, gerant):
     try:
-        data = request.POST
+        data = json.loads(request.body)
         name = data.get('name')
         category_id = data.get('category')
         barcode = data.get('barcode', '')
@@ -297,12 +297,13 @@ def add_product(request, gerant):
 @logged_in()
 def supply_product(request, gerant):
     try:
-        product_id = request.POST.get('product_id')
-        quantity = request.POST.get('quantity')
-        price = request.POST.get('price')
-        change_price = request.POST.get('change_price', False)
-        four = request.POST.get('four', None)
-        buy_later = request.POST.get('buy_later', False)
+        data = json.loads(request.body)
+        product_id = data.get('product_id')
+        quantity = data.get('quantity')
+        price = data.get('price')
+        change_price = data.get('change_price', False)
+        four = data.get('four', None)
+        buy_later = data.get('buy_later', False)
         site = get_manager_site(gerant, request)
         if not site:
             return JsonResponse({'status': 'error', 'message': _(CHOOSE_SITE)}, status=404)
@@ -337,8 +338,9 @@ def supply_product(request, gerant):
 @logged_in(level=ADMIN_LEVEL)
 def change_product_price(request, gerant):
     try:
-        product_id = request.POST.get('product_id')
-        new_price = request.POST.get('new_price')
+        data = json.loads(request.body)
+        product_id = data.get('product_id')
+        new_price = data.get('new_price')
 
         if not product_id or not new_price:
             return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
@@ -358,8 +360,9 @@ def change_product_price(request, gerant):
 @logged_in()
 def change_product_barcode(request, gerant):
     try:
-        product_id = request.POST.get('code')
-        barcode = request.POST.get('barcode')
+        data = json.loads(request.body)
+        product_id = data.get('code')
+        barcode = data.get('barcode')
         print(f"code barre: {barcode}")
         barcode = int(barcode)
 
@@ -383,7 +386,8 @@ def change_product_barcode(request, gerant):
 @logged_in(level=SUPER_ADMIN_LEVEL)
 def delete_product(request, gerant):
     try:
-        product_id = request.POST.get('product_id')
+        data = json.loads(request.body)
+        product_id = data.get('product_id')
 
         if not product_id:
             return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
@@ -403,7 +407,8 @@ def delete_product(request, gerant):
 @unique_method('POST')
 @logged_in(level=ADMIN_LEVEL)
 def add_category(request, gerant):
-    category_name = request.POST.get('category_name')
+    data = json.loads(request.body)
+    category_name = data.get('category_name')
 
     if not category_name:
         return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
@@ -418,7 +423,8 @@ def add_category(request, gerant):
 @logged_in(level=SUPER_ADMIN_LEVEL)
 def delete_category(request, gerant):
     try:
-        category_id = request.POST.get('category_id')
+        data = json.loads(request.body)
+        category_id = data.get('category_id')
 
         if not category_id:
             return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
@@ -439,9 +445,10 @@ def delete_category(request, gerant):
 @logged_in(level=SUPER_ADMIN_LEVEL)
 def add_gerant(request, gerant):
     try:
-        gerant_name = request.POST.get('gerant_name')
-        gerant_pwd = request.POST.get('gerant_pwd')
-        gerant_site = request.POST.get('site')
+        data = json.loads(request.body)
+        gerant_name = data.get('gerant_name')
+        gerant_pwd = data.get('gerant_pwd')
+        gerant_site = data.get('site')
 
         if not gerant_name:
             return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
@@ -465,7 +472,8 @@ def add_gerant(request, gerant):
 @logged_in(level=SUPER_ADMIN_LEVEL)
 def delete_gerant(request, gerant):
     try:
-        gerant_id = request.POST.get('gerant_id')
+        data = json.loads(request.body)
+        gerant_id = data.get('gerant_id')
 
         if not gerant_id:
             return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
@@ -489,7 +497,8 @@ def delete_gerant(request, gerant):
 @logged_in(level=SUPER_ADMIN_LEVEL)
 def promote_gerant(request, gerant):
     try:
-        gerant_id = request.POST.get('gerant_id')
+        data = json.loads(request.body)
+        gerant_id = data.get('gerant_id')
 
         if not gerant_id:
             return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
@@ -508,7 +517,8 @@ def promote_gerant(request, gerant):
 @logged_in(level=SUPER_ADMIN_LEVEL)
 def demote_gerant(request, gerant):
     try:
-        gerant_id = request.POST.get('gerant_id')
+        data = json.loads(request.body)
+        gerant_id = data.get('gerant_id')
 
         if not gerant_id:
             return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
@@ -527,7 +537,7 @@ def demote_gerant(request, gerant):
 @unique_method('POST')
 @logged_in(level=SUPER_ADMIN_LEVEL)
 def add_site(request, gerant):
-    data = request.POST
+    data = json.loads(request.body)
     site_name = data.get('site_name')
     sites = search_engine(Site, 'nom', site_name, True)
     if sites:
@@ -578,7 +588,8 @@ def stock_validation(request, gerant):
     if not site:
         return JsonResponse({'status': 'error', 'message': _(CHOOSE_SITE)}, status=404)
     try:
-        data = json.loads(request.body)
+        data = json.loads(request.body).get('products', None)
+
         verification = VerificationStock(gerant=gerant)
         if data:
             verification.erreur = True
@@ -602,7 +613,7 @@ def deadlines_providers(request, gerant):
     site = get_manager_site(gerant, request)
     deadlines = Paiement.objects.all().filter(est_terminee=False).filter(destinataire=Paiement.FOUR)
     if site:
-        deadlines = deadlines.filter(approvisionnement__gerant__site=site)
+        deadlines = deadlines.filter(approvisionnement__site=site)
     deadlines = deadlines.order_by("-approvisionnement__date_achat")
     return render(request, 'deadlines.html', {"gerant": gerant,
                                               "deadlines_providers": deadlines,
@@ -616,7 +627,7 @@ def deadlines_clients(request, gerant):
     site = get_manager_site(gerant, request)
     deadlines = Paiement.objects.all().filter(est_terminee=False).filter(destinataire=Paiement.CLIENT)
     if site:
-        deadlines = deadlines.filter(commande__gerant__site=site)
+        deadlines = deadlines.filter(approvisionnement__site=site)
     deadlines = deadlines.order_by("-commande__date")
     return render(request, 'deadlines.html', {"gerant": gerant,
                                               "deadlines_clients": deadlines

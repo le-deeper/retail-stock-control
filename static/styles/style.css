@@ -435,17 +435,17 @@ button {
     flex-wrap: wrap;
 }
 
-#error {
+#error, .error-text {
     color: red;
     text-align: center;
     font-size: 1.2em;
-    margin-top: 20px;
-
+    margin: 20px 0;
 }
 
 .error {
     background-color: #f1002f8f !important;
 }
+
 #no-result {
     text-align: center;
     font-size: 1.2em;

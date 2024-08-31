@@ -31,7 +31,7 @@ Web application to manage stock, orders and supplies for a retail business.
 > Send these actions on telegram to a specific conversation.  
 
 ### Management
-> Statistics (sales, revenue, number of products sold, total number of products sold, sales of a particular product).  
+> Statistics (sales, revenue, number of products sold, total number of products sold, sales of a particular product) for each or all sites.  
 > Graphs by criteria (by day, by month, by year, by payment method) and several graph types available.  
 > Inventory verification record.  
 

@@ -1,4 +1,23 @@
-const add_new_product = () => {
+const calcul_total = () => {
+    const products = document.getElementById("new-command").getElementsByClassName('product-command');
+    let total = 0;
+    for (let product of products) {
+        const product_exist = product.getElementsByClassName('product-code')[0].value > 0;
+        if (!product_exist) {
+            continue;
+        }
+        if (product.getElementsByClassName('isGift')[0].checked) {
+            continue
+        }
+        const quantity = product.getElementsByClassName('quantity')[0].value;
+        const price = product.getElementsByClassName('price')[0].value;
+        total += (quantity * price);
+
+    }
+    document.getElementById('command-total').innerText = `Total: ${total} ${currency}`;
+}
+
+const addNewProductOrder = () => {
     const formContainer = document.getElementById('new-command');
     // const newRow = document.createElement('div');
     let new_command = document.getElementsByClassName("product-command")[0]
@@ -12,7 +31,6 @@ const add_new_product = () => {
 
 
 async function sendOrder(parentDiv) {
-    display_hide("loading", "main-loading")
     const products = [];
     const productDivs = parentDiv.getElementsByClassName('product-command');
     let isCommandWithOneProduct = false
@@ -35,54 +53,34 @@ async function sendOrder(parentDiv) {
             is_gift: isGift
         });
     }
-    if (!isCommandWithOneProduct) {
-        display_hide("loading", "main-loading")
-        showPopup('Veuillez remplir au moins un produit', true);
-        return;
-    }
+    if (!checkInputs(isCommandWithOneProduct)) return;
 
     let paiementMethod = document.getElementById('paiement').value;
+    if (paiementMethod === 'none') {
+        showPopup('Veuillez choisir un mode de paiement', true);
+        return;
+    }
     const clientName = document.getElementById('client-name').value;
     const comment = document.getElementById("command-comment").value;
     const isBuyingLater = document.getElementById('isBuyingLater').checked;
-
-    try {
-        const response = await fetch('/submit/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({ products: products , paiement_method: paiementMethod,
-                client_name: clientName, comment: comment, is_buying_later: isBuyingLater})
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const responseData = await response.json();
-        display_hide("loading", "main-loading")
-        showPopup(responseData.message, responseData.status === 'error');
-        if (responseData.status !== 'error') {
+    sendRequest('/submit/', { products: products , paiement_method: paiementMethod,
+        client_name: clientName, comment: comment, is_buying_later: isBuyingLater}, "main-loading", 'POST').then(data => {
+        if (data.status !== 'error') {
             clearInputs(parentDiv);
             document.getElementById("command-total").textContent = `Total: 0 ${currency}`;
         }
-    } catch (error) {
-        console.error('Failed to submit order:', error);
-        display_hide("loading", "main-loading")
-    }
+    });
+
 }
 
 document.addEventListener('keydown', function(event) {
     if (event.key === 'm' && event.ctrlKey) {
         // Call the desired function here
-        add_new_product();
+        addNewProductOrder();
     }
 });
 
-async function supplyProduct() {
-    display_hide("loading", "main-loading")
+async function supplyProduct(parentDiv) {
     const productId = document.getElementById('supply-product-id').value;
     const productQuantity = document.getElementById('supply-product-qty').value;
     const productPrice = document.getElementById('supply-product-price').value;
@@ -90,84 +88,27 @@ async function supplyProduct() {
     const productFour = document.getElementById('supply-product-four').value;
     const buyLater = document.getElementById('supply-product-buy-later').checked
 
-    if (!productId || !productQuantity || !productPrice) {
-        display_hide("loading", "main-loading")
-        showPopup('Veuillez remplir tous les champs', true);
-        return;
-    }
+    if (!checkInputs(productId, productQuantity, productPrice)) return;
 
-    const formData = new FormData();
-    formData.append('product_id', productId);
-    formData.append('quantity', productQuantity);
-    formData.append('price', productPrice);
-    formData.append('change_price', productChangePrice === 'on')
-    formData.append('four', productFour)
-    formData.append('buy_later', buyLater)
-
-
-    try {
-        const response = await fetch('/supply_product/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: formData
-        });
-
-        const responseData = await response.json();
-        display_hide("loading", "main-loading")
-        showPopup(responseData.message);
-        if (response.ok) clearInputs(document.getElementById("supply-product"));
-
-    } catch (error) {
-        display_hide("loading", "main-loading")
-        showPopup("Erreur serveur", true);
-    }
+    sendRequest('/supply_product/', { product_id: productId, quantity: productQuantity, price: productPrice,
+        change_price: productChangePrice === 'on', four: productFour, buy_later: buyLater }, "main-loading",
+        'POST').then(data => {
+        if (data.status !== 'error') {
+            clearInputs(parentDiv);
+        }
+    })
 }
 
-async function changerProductBarcode() {
-    display_hide("loading", "main-loading")
+async function changerProductBarcode(parentDiv) {
     const productCode = document.getElementById('change-product-barcode-code').value;
     const productBarcode = document.getElementById('change-product-barcode-barcode').value
+    if (!checkInputs(productCode, productBarcode)) return;
 
-    if (!productBarcode || !productCode) {
-        display_hide("loading", "main-loading")
-        showPopup('Veuillez remplir tous les champs', true);
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('code', productCode);
-    formData.append('barcode', productBarcode);
-
-    try {
-        const response = await fetch('/change_product_barcode/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+    sendRequest('/change_product_barcode/', { code: productCode, barcode: productBarcode }, "main-loading", 'POST').then(data => {
+        if (data.status !== 'error') {
+            clearInputs(parentDiv);
         }
-
-        const responseData = await response.json();
-        display_hide("loading", "main-loading")
-        if (responseData.status === 'error'){
-            showPopup(responseData.message, true);
-        }
-        else showPopup(responseData.message);
-
-        if (response.ok) {
-            clearInputs(document.getElementById("change-product-barcode"));
-        }
-
-    } catch (error) {
-        display_hide("loading", "main-loading")
-        showPopup("Erreur serveur", true);
-    }
+    })
 }
 
 const setProductChangeBarcodeValue = (elt, code)=> {

@@ -2,41 +2,18 @@ async function fetchPerformance(url, id, start_date_id, end_date_id, loading_id)
     const startDate = document.getElementById(start_date_id).value;
     const endDate = document.getElementById(end_date_id).value;
 
-    if (!startDate || !endDate) {
-        showPopup('Veuillez sélectionner les dates de début et de fin');
-        return;
+    if (!checkInputs(startDate, endDate)) return
+    const data = {
+        year_start: new Date(startDate).getFullYear(),
+        month_start: new Date(startDate).getMonth() + 1,
+        day_start: new Date(startDate).getDate(),
+        year_end: new Date(endDate).getFullYear(),
+        month_end: new Date(endDate).getMonth() + 1,
+        day_end: new Date(endDate).getDate()
     }
-
-    display_hide('loading', loading_id);
-
-    const formData = new FormData();
-    formData.append('year_start', new Date(startDate).getFullYear());
-    formData.append('month_start', new Date(startDate).getMonth() + 1);
-    formData.append('day_start', new Date(startDate).getDate());
-    formData.append('year_end', new Date(endDate).getFullYear());
-    formData.append('month_end', new Date(endDate).getMonth() + 1);
-    formData.append('day_end', new Date(endDate).getDate());
-
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const responseData = await response.json();
+    sendRequest(url, data, loading_id, 'POST').then(responseData => {
         document.getElementById(id).textContent = `${responseData.result} ${currency}`;
-        display_hide('loading', loading_id);
-
-    } catch (error) {
-        alert("Erreur serveur");
-    }
+    })
 }
 
 async function fetchPerformanceChart(url, canvasId, start_date_id, end_date_id,
@@ -45,39 +22,24 @@ async function fetchPerformanceChart(url, canvasId, start_date_id, end_date_id,
     const startDate = document.getElementById(start_date_id).value;
     const endDate = document.getElementById(end_date_id).value;
     const chartType = document.getElementById(type_chart_id).value;
+    if (!checkInputs(startDate, endDate)) return;
 
-    display_hide('loading', loading_id)
-
-    if (!startDate || !endDate) {
-        alert('Veuillez sélectionner les dates de début et de fin');
-        return;
+    const data = {
+        year_start: new Date(startDate).getFullYear(),
+        month_start: new Date(startDate).getMonth() + 1,
+        day_start: new Date(startDate).getDate(),
+        year_end: new Date(endDate).getFullYear(),
+        month_end: new Date(endDate).getMonth() + 1,
+        day_end: new Date(endDate).getDate()
     }
 
-    const formData = new FormData();
-    formData.append('year_start', new Date(startDate).getFullYear());
-    formData.append('month_start', new Date(startDate).getMonth() + 1);
-    formData.append('day_start', new Date(startDate).getDate());
-    formData.append('year_end', new Date(endDate).getFullYear());
-    formData.append('month_end', new Date(endDate).getMonth() + 1);
-    formData.append('day_end', new Date(endDate).getDate());
     for (let i = 0; i < postData.length; i += 2) {
-        formData.append(postData[i], postData[i + 1]);
+        data[postData[i]] = postData[i + 1];
     }
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const responseData = await response.json();
+    sendRequest(url, data, loading_id, 'POST').then(responseData => {
+        showPopup('Chargement des données...', false)
+        display_hide(loading_id, 'main-loading')
         const salesData = responseData.result;
 
         const labels = [];
@@ -142,12 +104,9 @@ async function fetchPerformanceChart(url, canvasId, start_date_id, end_date_id,
         }
 
         displayChart(canvasId, data, labels, chartTitle, chartType);
-        display_hide('loading', loading_id)
+        display_hide(loading_id, 'main-loading')
         return responseData
-
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    })
 }
 
 async function fetchSalesPerformance() {
