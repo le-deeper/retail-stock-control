@@ -79,6 +79,8 @@ Web application to manage stock, orders and supplies for a retail business.
 - __*currency*__: Text to be displayed in front of prices (e.g. $, €, XOF)
 - __*phone_number*__: Number to appear on customer invoice
 - __*eco_mode*__: !=0 for economy mode and 0 to deactivate
+- __*default_image*__: Default image for products who don't have an image
+- __*total_tolerance*__: Tolerance for the total of an order (search)
 
 ## Add a language
 > - add the language in settings.py in LANGUAGES  
