@@ -37,7 +37,7 @@ function showPopup(message, error=false) {
     }
     setTimeout(function() {
         popup.style.display = "none";
-    }, 2000); // Affiche le pop-up pendant 3 secondes
+    }, 3000); // Affiche le pop-up pendant 3 secondes
 }
 
 const setCookie = (name, value, days) => {
