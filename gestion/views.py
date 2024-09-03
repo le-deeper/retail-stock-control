@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect
-from django.utils.translation import gettext_lazy as _
 from django.utils.translation import activate
 from django.utils.timezone import make_aware
 from uuid import uuid4
@@ -55,16 +54,16 @@ def go_to_login(request):
             if make_aware(datetime.now()) - tentative.date < timedelta(minutes=60):
                 attempts += 1
         if attempts >= 3:
-            return JsonResponse({'status': 'error', 'message': _(TOO_MANY_ATTEMPTS)}, status=401)
+            return JsonResponse({'status': 'error', 'message': TOO_MANY_ATTEMPTS}, status=401)
         if gerant:
             # Save the session with the actual uuid
             session = Session(valeur=str(uuid4()), datelimit=datetime.now() + timedelta(days=5), gerant=gerant)
             session.save()
-            return JsonResponse({'status': 'success', 'message': _(CONNECTION_SUCCESS), 'session': session.valeur,
+            return JsonResponse({'status': 'success', 'message': CONNECTION_SUCCESS, 'session': session.valeur,
                                  'days': 5}, status=200)
         tentative = Tentative(pseudo=username)
         tentative.save()
-        return JsonResponse({'status': 'error', 'message': _(INVALID_IDS)}, status=401)
+        return JsonResponse({'status': 'error', 'message': INVALID_IDS}, status=401)
     return render(request, 'login.html')
 
 
@@ -97,7 +96,7 @@ def search(request, gerant):
     if qty:
         site = get_manager_site(gerant, request)
         if not site:
-            return JsonResponse({'status': 'error', 'message': _(CHOOSE_SITE)}, status=404)
+            return JsonResponse({'status': 'error', 'message': CHOOSE_SITE}, status=404)
     else:
         site = None
     produits = search_engine(Produit, 'nom', s)
@@ -110,16 +109,16 @@ def search(request, gerant):
 def search_barcode(request, gerant):
     site = get_manager_site(gerant, request)
     if not site:
-        return JsonResponse({'status': 'error', 'message': _(CHOOSE_SITE)}, status=200)
+        return JsonResponse({'status': 'error', 'message': CHOOSE_SITE}, status=404)
     s = request.GET.get('q')
     if not s:
-        return JsonResponse({'status': 'error', 'message': _(INVALID_CODE_BAR)}, status=200)
+        return JsonResponse({'status': 'error', 'message': INVALID_CODE_BAR}, status=400)
     produits = search_engine(Produit, 'code_bar', int(s), True)
     if produits:
         return JsonResponse(Produit.products_to_dict(produits, site, include_prix_achat=gerant.est_admin or
                                                                                         gerant.est_super_admin),
                             safe=False)
-    return JsonResponse({'status': 'error', 'message': _(UNKNOWN_PRODUCT)}, status=200)
+    return JsonResponse({'status': 'error', 'message': UNKNOWN_PRODUCT}, status=400)
 
 
 @unique_method('POST')
@@ -127,7 +126,7 @@ def search_barcode(request, gerant):
 def submit_order(request, gerant):
     try:
         if gerant.est_super_admin:
-            return JsonResponse({'status': 'error', 'message': _(SUPER_ADMIN_CANT_SELL)}, status=401)
+            return JsonResponse({'status': 'error', 'message': SUPER_ADMIN_CANT_SELL}, status=401)
         site = get_manager_site(gerant, request)
         data = json.loads(request.body)
         products = data.get('products', [])
@@ -149,7 +148,7 @@ def submit_order(request, gerant):
                 client = client[0]
             command_total.client = client
         if not products:
-            return JsonResponse({'status': 'error', 'message': _(UNKNOWN_PRODUCT)}, status=200)
+            return JsonResponse({'status': 'error', 'message': UNKNOWN_PRODUCT}, status=400)
         command_total.save()
 
         # Process each product
@@ -173,12 +172,12 @@ def submit_order(request, gerant):
             try:
                 stock = Stock.objects.filter(prod=prod, site=site).get()
             except Stock.DoesNotExist:
-                return JsonResponse({'status': 'error', 'message': _(QUANTITY_NOT_ENOUGH)},
-                                    status=200)
+                return JsonResponse({'status': 'error', 'message': QUANTITY_NOT_ENOUGH},
+                                    status=400)
             if stock.qte < int(quantity):
                 command_total.delete()
-                return JsonResponse({'status': 'error', 'message': _(QUANTITY_NOT_ENOUGH)},
-                                    status=200)
+                return JsonResponse({'status': 'error', 'message': QUANTITY_NOT_ENOUGH},
+                                    status=400)
             else:
                 stock.qte -= int(quantity)
             if prod.stock_urgence > stock.qte:
@@ -192,10 +191,10 @@ def submit_order(request, gerant):
         if is_buying_later:
             deadline = Paiement(commande=command_total)
             deadline.save()
-        warning_msg = "" if not warning_stock else _(QUANTITY_UNDER_WARNING)
-        return JsonResponse({'status': 'success', 'message': _(COMMAND_SAVED) + "." + warning_msg}, status=201)
+        warning_msg = "" if not warning_stock else QUANTITY_UNDER_WARNING
+        return JsonResponse({'status': 'success', 'message': COMMAND_SAVED + "." + warning_msg}, status=201)
     except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': _(INVALID_JSON)}, status=400)
+        return JsonResponse({'status': 'error', 'message': INVALID_JSON}, status=400)
 
 
 @unique_method('POST')
@@ -208,12 +207,12 @@ def edit_order(request, gerant):
         order = data.get('order', None)
         warning_stock = False
         if not order:
-            return JsonResponse({'status': 'error', 'message': _(UNKNOWN_COMMAND)}, status=200)
+            return JsonResponse({'status': 'error', 'message': UNKNOWN_COMMAND}, status=400)
         if not products:
-            return JsonResponse({'status': 'error', 'message': _(COMMAND_NOT_CHANGED)}, status=200)
+            return JsonResponse({'status': 'error', 'message': COMMAND_NOT_CHANGED}, status=400)
         command_total = search_engine(CommandeTotale, 'id_commande', order)
         if not command_total:
-            return JsonResponse({'status': 'error', 'message': _(UNKNOWN_COMMAND)}, status=200)
+            return JsonResponse({'status': 'error', 'message': UNKNOWN_COMMAND}, status=400)
         command_total = command_total[0]
 
         # Process each product
@@ -234,9 +233,9 @@ def edit_order(request, gerant):
             stock.qte += product_command.qte
             if stock.qte < quantity:
                 stock.qte -= product_command.qte
-                return JsonResponse({'status': 'error', 'message': _(QUANTITY_NOT_ENOUGH) +
+                return JsonResponse({'status': 'error', 'message': QUANTITY_NOT_ENOUGH +
                                                                    f" ({product_command.prod.nom})"},
-                                    status=200)
+                                    status=400)
             else:
                 stock.qte -= quantity
                 product_command.qte = quantity
@@ -248,10 +247,10 @@ def edit_order(request, gerant):
 
             stock.save()
             product_command.save()
-        warning_msg = "" if not warning_stock else _(QUANTITY_UNDER_WARNING)
-        return JsonResponse({'status': 'success', 'message': _(COMMAND_CHANGED) + "." + warning_msg}, status=201)
+        warning_msg = "" if not warning_stock else QUANTITY_UNDER_WARNING
+        return JsonResponse({'status': 'success', 'message': COMMAND_CHANGED + "." + warning_msg}, status=201)
     except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': _(INVALID_JSON)}, status=400)
+        return JsonResponse({'status': 'error', 'message': INVALID_JSON}, status=400)
 
 
 @unique_method('POST')
@@ -268,7 +267,7 @@ def add_product(request, gerant):
         warning_qty = data.get('warning_quantity', 0)
 
         if not name or not category_id or not price:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         category = search_engine(Categorie, 'id_categ', category_id, True)[0]
         new_product = Produit(
@@ -285,11 +284,11 @@ def add_product(request, gerant):
         new_product.save()
         create_adding_product_action(gerant, new_product).save()
 
-        return JsonResponse({'status': 'success', 'message': _(PRODUCT_ADDED)}, status=201)
+        return JsonResponse({'status': 'success', 'message': PRODUCT_ADDED}, status=201)
     except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': _(INVALID_JSON)}, status=400)
+        return JsonResponse({'status': 'error', 'message': INVALID_JSON}, status=400)
     except Categorie.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(UNKNOWN_CATEGORY)}, status=404)
+        return JsonResponse({'status': 'error', 'message': UNKNOWN_CATEGORY}, status=404)
 
 
 @unique_method('POST')
@@ -305,10 +304,10 @@ def supply_product(request, gerant):
         buy_later = data.get('buy_later', False)
         site = get_manager_site(gerant, request)
         if not site:
-            return JsonResponse({'status': 'error', 'message': _(CHOOSE_SITE)}, status=404)
+            return JsonResponse({'status': 'error', 'message': CHOOSE_SITE}, status=404)
 
         if not product_id or not quantity or not price:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         product = search_engine(Produit, 'id_prod', product_id, True)[0]
         stock = Stock.objects.filter(prod=product, site=site)
@@ -328,9 +327,9 @@ def supply_product(request, gerant):
             echeance.save()
         create_supplying_product_action(gerant, product, quantity).save()
 
-        return JsonResponse({'status': 'success', 'message': _(PRODUCT_UPDATED)}, status=201)
+        return JsonResponse({'status': 'success', 'message': PRODUCT_UPDATED}, status=201)
     except Produit.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(PRODUCT_NOT_FOUND)}, status=404)
+        return JsonResponse({'status': 'error', 'message': PRODUCT_NOT_FOUND}, status=404)
 
 
 @unique_method('POST')
@@ -342,7 +341,7 @@ def change_product_price(request, gerant):
         new_price = data.get('new_price')
 
         if not product_id or not new_price:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         product = Produit.objects.get(id_prod=product_id)
         action = create_changing_product_price_action(gerant, product, new_price)
@@ -350,9 +349,9 @@ def change_product_price(request, gerant):
         product.save()
         action.save()
 
-        return JsonResponse({'status': 'success', 'message': _(PRODUCT_UPDATED)}, status=200)
+        return JsonResponse({'status': 'success', 'message': PRODUCT_UPDATED}, status=200)
     except Produit.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(PRODUCT_NOT_FOUND)}, status=404)
+        return JsonResponse({'status': 'error', 'message': PRODUCT_NOT_FOUND}, status=404)
 
 
 @unique_method('POST')
@@ -365,19 +364,19 @@ def change_product_barcode(request, gerant):
         barcode = int(barcode)
 
         if not product_id or not barcode:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=200)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         product = Produit.objects.get(id_prod=product_id)
         products = Produit.objects.filter(code_bar=barcode)
         if products:
-            return JsonResponse({'status': 'error', 'message': _(INVALID_CODE_BAR)},
-                                status=200)
+            return JsonResponse({'status': 'error', 'message': INVALID_CODE_BAR},
+                                status=400)
         product.code_bar = barcode
         product.save()
 
-        return JsonResponse({'status': 'success', 'message': _(PRODUCT_UPDATED)}, status=200)
+        return JsonResponse({'status': 'success', 'message': PRODUCT_UPDATED}, status=200)
     except Produit.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(PRODUCT_NOT_FOUND)}, status=404)
+        return JsonResponse({'status': 'error', 'message': PRODUCT_NOT_FOUND}, status=404)
 
 
 @unique_method('POST')
@@ -388,7 +387,7 @@ def delete_product(request, gerant):
         product_id = data.get('product_id')
 
         if not product_id:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         product = search_engine(Produit, 'id_prod', product_id, True)[0]
         action = create_deleting_product_action(gerant, product)
@@ -397,9 +396,9 @@ def delete_product(request, gerant):
         send_message_to_admin(TELEGRAM_FORMAT.format(title=action.gerant.nom, description=action.action,
                                                      date=action.date.strftime('%d/%m/%Y à %H:%M')))
 
-        return JsonResponse({'status': 'success', 'message': _(PRODUCT_DELETED)}, status=200)
+        return JsonResponse({'status': 'success', 'message': PRODUCT_DELETED}, status=200)
     except Produit.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(PRODUCT_NOT_FOUND)}, status=404)
+        return JsonResponse({'status': 'error', 'message': PRODUCT_NOT_FOUND}, status=404)
 
 
 @unique_method('POST')
@@ -409,12 +408,12 @@ def add_category(request, gerant):
     category_name = data.get('category_name')
 
     if not category_name:
-        return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+        return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
     category = Categorie(nom=category_name)
     category.save()
 
-    return JsonResponse({'status': 'success', 'message': _(CATEGORY_ADDED)}, status=200)
+    return JsonResponse({'status': 'success', 'message': CATEGORY_ADDED}, status=200)
 
 
 @unique_method('POST')
@@ -425,7 +424,7 @@ def delete_category(request, gerant):
         category_id = data.get('category_id')
 
         if not category_id:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         category = search_engine(Categorie, 'id_categ', category_id, True)[0]
         action = create_delete_category_action(gerant, category)
@@ -434,9 +433,9 @@ def delete_category(request, gerant):
         send_message_to_admin(TELEGRAM_FORMAT.format(title=action.gerant.nom, description=action.action,
                                                      date=action.date.strftime('%d/%m/%Y à %H:%M')))
 
-        return JsonResponse({'status': 'success', 'message': _(CATEGORY_DELETED)}, status=200)
+        return JsonResponse({'status': 'success', 'message': CATEGORY_DELETED}, status=200)
     except Categorie.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(CATEGORY_NOT_FOUND)}, status=404)
+        return JsonResponse({'status': 'error', 'message': CATEGORY_NOT_FOUND}, status=404)
 
 
 @unique_method('POST')
@@ -449,11 +448,11 @@ def add_gerant(request, gerant):
         gerant_site = data.get('site')
 
         if not gerant_name:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         site = search_engine(Site, 'nom', gerant_site, True)
         if not site:
-            return JsonResponse({'status': 'error', 'message': _(CHOOSE_SITE)}, status=404)
+            return JsonResponse({'status': 'error', 'message': CHOOSE_SITE}, status=404)
 
         new_gerant = Gerant(nom=gerant_name, mdp=hash_password(gerant_pwd), site=site[0])
         new_gerant.est_admin = request.POST.get('is_admin', False)
@@ -461,9 +460,9 @@ def add_gerant(request, gerant):
         new_gerant.save()
         action.save()
 
-        return JsonResponse({'status': 'success', 'message': _(MANAGER_ADDED)}, status=200)
+        return JsonResponse({'status': 'success', 'message': MANAGER_ADDED}, status=200)
     except Gerant.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(MANAGER_NOT_FOUND)}, status=404)
+        return JsonResponse({'status': 'error', 'message': MANAGER_NOT_FOUND}, status=404)
 
 
 @unique_method('POST')
@@ -474,11 +473,11 @@ def delete_gerant(request, gerant):
         gerant_id = data.get('gerant_id')
 
         if not gerant_id:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         gerant_to_delete = Gerant.objects.get(gerant=gerant_id)
         if gerant_to_delete.est_super_admin:
-            return JsonResponse({'status': 'error', 'message': _(SUPER_ADMIN_CANT_BE_DELETED)},
+            return JsonResponse({'status': 'error', 'message': SUPER_ADMIN_CANT_BE_DELETED},
                                 status=400)
         action = create_deleting_manager_action(gerant, gerant_to_delete)
         gerant_to_delete.delete()
@@ -486,9 +485,9 @@ def delete_gerant(request, gerant):
         send_message_to_admin(TELEGRAM_FORMAT.format(title=action.gerant.nom, description=action.action,
                                                      date=action.date.strftime('%d/%m/%Y à %H:%M')))
 
-        return JsonResponse({'status': 'success', 'message': _(MANAGER_DELETED)}, status=200)
+        return JsonResponse({'status': 'success', 'message': MANAGER_DELETED}, status=200)
     except Gerant.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(MANAGER_NOT_FOUND)}, status=404)
+        return JsonResponse({'status': 'error', 'message': MANAGER_NOT_FOUND}, status=404)
 
 
 @unique_method('POST')
@@ -499,16 +498,16 @@ def promote_gerant(request, gerant):
         gerant_id = data.get('gerant_id')
 
         if not gerant_id:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         gerant_to_promote = Gerant.objects.get(gerant=gerant_id)
         gerant_to_promote.est_admin = True
         create_promoting_manager_action(gerant, gerant_to_promote).save()
         gerant_to_promote.save()
 
-        return JsonResponse({'status': 'success', 'message': _(MANAGER_PROMOTED)}, status=200)
+        return JsonResponse({'status': 'success', 'message': MANAGER_PROMOTED}, status=200)
     except Gerant.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(MANAGER_NOT_FOUND)}, status=404)
+        return JsonResponse({'status': 'error', 'message': MANAGER_NOT_FOUND}, status=404)
 
 
 @unique_method('POST')
@@ -519,7 +518,7 @@ def demote_gerant(request, gerant):
         gerant_id = data.get('gerant_id')
 
         if not gerant_id:
-            return JsonResponse({'status': 'error', 'message': _(FIELDS_REQUIRED)}, status=400)
+            return JsonResponse({'status': 'error', 'message': FIELDS_REQUIRED}, status=400)
 
         gerant_to_demote = Gerant.objects.get(gerant=gerant_id)
         gerant_to_demote.est_admin = False
@@ -527,9 +526,9 @@ def demote_gerant(request, gerant):
         gerant_to_demote.save()
         action.save()
 
-        return JsonResponse({'status': 'success', 'message': _(MANAGER_DEMOTED)}, status=200)
+        return JsonResponse({'status': 'success', 'message': MANAGER_DEMOTED}, status=200)
     except Gerant.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': _(MANAGER_NOT_FOUND)}, status=404)
+        return JsonResponse({'status': 'error', 'message': MANAGER_NOT_FOUND}, status=404)
 
 
 @unique_method('POST')
@@ -539,11 +538,11 @@ def add_site(request, gerant):
     site_name = data.get('site_name')
     sites = search_engine(Site, 'nom', site_name, True)
     if sites:
-        return JsonResponse({'status': 'error', 'message': _(SITE_ALREADY_EXISTS)}, status=400)
+        return JsonResponse({'status': 'error', 'message': SITE_ALREADY_EXISTS}, status=400)
     new_site = Site(nom=site_name)
     new_site.save()
     create_adding_site_action(gerant, site_name).save()
-    return JsonResponse({'status': 'success', 'message': _(SITE_ADDED)}, status=200)
+    return JsonResponse({'status': 'success', 'message': SITE_ADDED}, status=200)
 
 
 @unique_method('GET')
@@ -552,7 +551,7 @@ def stock(request, gerant):
     products = Produit.objects.all()
     site = get_manager_site(gerant, request)
     if not site:
-        return JsonResponse({'status': 'error', 'message': _(CHOOSE_SITE)}, status=200)
+        return JsonResponse({'status': 'error', 'message': CHOOSE_SITE}, status=401)
 
     return render(request, 'stock.html', {"products": Produit.products_to_dict(products, site),
                                           "gerant": gerant,
@@ -584,7 +583,7 @@ def stock_verification(request, gerant):
 def stock_validation(request, gerant):
     site = get_manager_site(gerant, request)
     if not site:
-        return JsonResponse({'status': 'error', 'message': _(CHOOSE_SITE)}, status=404)
+        return JsonResponse({'status': 'error', 'message': CHOOSE_SITE}, status=404)
     try:
         data = json.loads(request.body).get('products', None)
 
@@ -600,9 +599,9 @@ def stock_validation(request, gerant):
             action.save()
             stock.save()
 
-        return JsonResponse({'status': 'success', 'message': _(VERIFICATION_ADDED)}, status=200)
+        return JsonResponse({'status': 'success', 'message': VERIFICATION_ADDED}, status=200)
     except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': _(INVALID_JSON)}, status=400)
+        return JsonResponse({'status': 'error', 'message': INVALID_JSON}, status=400)
 
 
 @unique_method('GET')
@@ -649,9 +648,9 @@ def deadlines(request, gerant):
         echeance.parti_payee = float(echeance.parti_payee) + float(part_to_add)
         if echeance.parti_payee > echeance.total:
             return JsonResponse({'status': 'error',
-                                 'message': _(CANT_PAY_MORE)},
+                                 'message': CANT_PAY_MORE},
                                 status=400)
         if echeance.parti_payee == echeance.total:
             echeance.est_terminee = True
     echeance.save()
-    return JsonResponse({'status': 'success', 'message': _(PRODUCT_UPDATED)}, status=200)
+    return JsonResponse({'status': 'success', 'message': PRODUCT_UPDATED}, status=200)

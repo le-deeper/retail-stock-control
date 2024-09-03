@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-31 21:21+0000\n"
+"POT-Creation-Date: 2024-09-03 04:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: .\retail_stock_control\settings.py:119
 msgid "Français"
 msgstr "French"
+
+#: .\retail_stock_control\settings.py:120
+msgid "Anglais"
+msgstr ""
 
 #: .\templates\actions_history.html:9
 msgid "Voir que les actions dûes à une vérification de stock"
@@ -426,7 +431,9 @@ msgid "Paiement"
 msgstr "Payment"
 
 #: .\templates\order_history.html:19
-msgid "Total à 50 près"
+#, fuzzy
+#| msgid "Total à 50 près"
+msgid "Total à x près"
 msgstr "Total to nearest 50"
 
 #: .\templates\order_history.html:21 .\templates\supplying_history.html:19
@@ -480,8 +487,7 @@ msgstr "Search by manager name -> manager-manager name"
 msgid ""
 "Rechercher avec la date -> jj/mm/aaaa ou jj/mm/aaaa ou jj/mm/aaaa hh: ou jj/"
 "mm/aaaa hh:mm"
-msgstr ""
-"Search by date -> dd/mm/yyyy or dd/mm/yyyy hh: or dd/mm/yyyy hh:mm"
+msgstr "Search by date -> dd/mm/yyyy or dd/mm/yyyy hh: or dd/mm/yyyy hh:mm"
 
 #: .\templates\order_history.html:94
 msgid "Exemple: client-mourad , date-12/01/2024 13:"
@@ -539,10 +545,175 @@ msgstr "Search using a supplier's name -> supp-name of supplier"
 msgid "Exemple: gerant-Housseine , 12/01/2022 , four-Ousmane"
 msgstr "Example: manager-Housseine , 12/01/2022 , supp-Ousmane"
 
-#: .\utility\connectivity.py:51
+#: .\utility\connectivity.py:52
 msgid "Vous n'avez pas les droits nécessaires pour accéder à cette page."
 msgstr "You do not have the necessary rights to access this page."
 
-#: .\utility\connectivity.py:53
+#: .\utility\connectivity.py:54
 msgid "Vous devez vous connecter pour accéder à cette page."
 msgstr "You need to log in to access this page."
+
+#: .\utility\errors.py:3
+msgid "Mauvaise requête"
+msgstr ""
+
+#: .\utility\errors.py:4
+msgid "JSON invalide"
+msgstr ""
+
+#: .\utility\errors.py:5
+msgid "Identifiants invalides"
+msgstr ""
+
+#: .\utility\errors.py:6
+#| msgid "Connexion"
+msgid "Connexion réussie"
+msgstr "Successful connection"
+
+#: .\utility\errors.py:7
+msgid "Champs requis non renseignés"
+msgstr ""
+
+#: .\utility\errors.py:8
+msgid "Produit non trouvé"
+msgstr ""
+
+#: .\utility\errors.py:9
+msgid "Produit mis à jour"
+msgstr ""
+
+#: .\utility\errors.py:10
+msgid "Catégorie non trouvée"
+msgstr ""
+
+#: .\utility\errors.py:11
+msgid "Gérant non trouvé"
+msgstr ""
+
+#: .\utility\errors.py:12
+msgid "Trop de tentatives, Veuillez patienter 1 heure"
+msgstr ""
+
+#: .\utility\errors.py:13
+msgid "Veuillez choisir un site"
+msgstr ""
+
+#: .\utility\errors.py:14
+msgid "Veuillez saisir un code barre correct"
+msgstr ""
+
+#: .\utility\errors.py:15
+msgid "Un super admin ne peut pas vendre"
+msgstr ""
+
+#: .\utility\errors.py:16
+msgid "Quantité supérieur à celle possédé"
+msgstr ""
+
+#: .\utility\errors.py:17
+msgid "Attention, certains produits sont en dessous du seuil d'urgence"
+msgstr ""
+
+#: .\utility\errors.py:18
+#, fuzzy
+#| msgid "Aucune actions enregistrées"
+msgid "Commande enregistrée"
+msgstr "No actions recorded"
+
+#: .\utility\errors.py:19
+msgid "Aucun produit à modifier"
+msgstr ""
+
+#: .\utility\errors.py:20
+msgid "Commande modifiée"
+msgstr ""
+
+#: .\utility\errors.py:21
+#, fuzzy
+#| msgid "Produits"
+msgid "Produit ajouté"
+msgstr "Products"
+
+#: .\utility\errors.py:22
+msgid "Product supprimé"
+msgstr ""
+
+#: .\utility\errors.py:23
+msgid "Catégorie ajoutée"
+msgstr ""
+
+#: .\utility\errors.py:24
+msgid "Catégorie supprimée"
+msgstr ""
+
+#: .\utility\errors.py:25
+msgid "Gérant ajouté"
+msgstr ""
+
+#: .\utility\errors.py:26
+msgid "Un super admin ne peut pas être supprimé"
+msgstr ""
+
+#: .\utility\errors.py:27
+msgid "Gérant supprimé"
+msgstr ""
+
+#: .\utility\errors.py:28
+msgid "Gérant promu"
+msgstr ""
+
+#: .\utility\errors.py:29
+msgid "Gérant rétrogradé"
+msgstr ""
+
+#: .\utility\errors.py:30
+msgid "Site déjà existant"
+msgstr ""
+
+#: .\utility\errors.py:31
+msgid "Site ajouté"
+msgstr ""
+
+#: .\utility\errors.py:32
+#, fuzzy
+#| msgid "Vérification"
+msgid "Vérification ajoutée"
+msgstr "Verification"
+
+#: .\utility\errors.py:33
+msgid "La somme payée ne peut pas être supérieure à la somme totale"
+msgstr ""
+
+#: .\utility\errors.py:34
+#, fuzzy
+#| msgid "Paiements"
+msgid "Paiement mis à jour"
+msgstr "Payments"
+
+#: .\utility\errors.py:35
+#, fuzzy
+#| msgid "Rechercher"
+msgid "Mauvaise Recherche"
+msgstr "Search"
+
+#: .\utility\errors.py:36
+#, fuzzy
+#| msgid "Vous n'avez pas les droits nécessaires pour accéder à cette page."
+msgid "Vous n'avez pas le droit de télécharger cette commande"
+msgstr "You do not have the necessary rights to access this page."
+
+#: .\utility\errors.py:37
+msgid "Catégorie introuvable"
+msgstr ""
+
+#: .\utility\errors.py:38
+#, fuzzy
+#| msgid "Produit en particulier"
+msgid "Produit introuvable"
+msgstr "Specific product"
+
+#: .\utility\errors.py:39
+#, fuzzy
+#| msgid "Aucune commande trouvée"
+msgid "Commande introuvable"
+msgstr "No order found"

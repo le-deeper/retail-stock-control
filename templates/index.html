@@ -23,9 +23,9 @@
                     <div class="form-row">
                         <button class="first-button" onclick="scanBarcode(this, searchByBarcode)">{% trans "Scanner Code bar" %}</button>
                         <input type="number" class="product-code hidden">
-                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, true, true)">
-                        <input type="number" class="quantity" placeholder="{% trans 'Quantité' %}" oninput="calcul_total()">
-                        <input type="number" class="price" placeholder="{% trans 'Prix de vente' %}" oninput="calcul_total()">
+                        <input type="text" class="product-search necessary" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, true, true)">
+                        <input type="number" class="quantity necessary" placeholder="{% trans 'Quantité' %}" oninput="calcul_total()">
+                        <input type="number" class="price necessary" placeholder="{% trans 'Prix de vente' %}" oninput="calcul_total()">
                         <label><input type="checkbox" class="isGift" oninput="calcul_total()">{% trans "Cadeau" %}</label>
                     </div>
                     <div id="search-results" class="search-results hidden"></div>
@@ -33,7 +33,7 @@
             </div>
             <div class="form-row hidden" id="paiement-container">
                 <input type="text" id="client-name" placeholder="{% trans 'Nom du client' %}">
-                <select id="paiement">
+                <select id="paiement" class="necessary">
                     <<option value="none">{% trans 'Sélectionner une méthode de paiement' %}</option>
                     {% for paiement in paiements %}
                         <option value="{{ paiement.id_paiement }}">{{ paiement.nom }}</option>
@@ -65,14 +65,14 @@
             {% if gerant.est_super_admin %}
                 <button class="red-button" onclick="display_hide('products-actions', 'delete-product')">{% trans "Supprimer produit" %}</button>
             {% endif %}
-            <button class="normal-action" onclick="display_hide('products-actions', 'change-product-barcode')">Changer Code Barre Produit</button>
+            <button class="normal-action" onclick="display_hide('products-actions', 'change-product-barcode')">{% trans "Changer Code Barre Produit" %}</button>
         </div>
         <hr class="sep">
         {% if gerant.est_super_admin or gerant.est_admin %}
             <div id="new-product" class="form-container hidden">
                 <div class="form-row">
-                    <input type="text" id="product-name" placeholder="{% trans 'Nom du produit' %}">
-                    <select id="product-category">
+                    <input type="text" id="product-name"  class="necessary" placeholder="{% trans 'Nom du produit' %}">
+                    <select id="product-category" class="necessary">
                         <<option value="">{% trans "Sélectionner une catégorie" %}</option>
                         {% for category in categories %}
                             <option value="{{ category.id_categ }}">{{ category.nom }}</option>
@@ -81,8 +81,8 @@
                     <input type="text" placeholder="{% trans 'Code bar du produit (falcultatif)' %}" id="product-barcode">
                 </div>
                 <div class="form-row">
-                    <input type="number" class="product-warning-quantity" placeholder="{% trans "Quantité d'urgence" %}" id="new-product-warning-qty">
-                    <input type="number" class="product-price" placeholder="{% trans 'Prix de vente' %}" id="new-product-price">
+                    <input type="number" class="product-warning-quantity necessary" placeholder="{% trans "Quantité d'urgence" %}" id="new-product-warning-qty">
+                    <input type="number" class="product-price necessary" placeholder="{% trans 'Prix de vente' %}" id="new-product-price">
                 </div>
                 <div class="form-row">
                     <input type="file" id="product-image" placeholder="{% trans 'Choisir une image' %}">
@@ -99,11 +99,11 @@
                 <div class="form-row">
                     <button class="first-button" onclick="scanBarcode(this, searchByBarcode)">{% trans "Scanner Code bar" %}</button>
                     <input type="number" class="product-code hidden" id="supply-product-id">
-                    <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this)">
+                    <input type="text" class="product-search necessary" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this)">
                 </div>
                 <div class="form-row">
-                    <input type="number" class="quantity" placeholder="{% trans 'Quantité' %}" id="supply-product-qty">
-                    <input type="number" class="price" placeholder="{% trans "Prix d'achat" %}" id="supply-product-price">
+                    <input type="number" class="quantity necessary" placeholder="{% trans 'Quantité' %}" id="supply-product-qty">
+                    <input type="number" class="price necessary" placeholder="{% trans "Prix d'achat" %}" id="supply-product-price">
                     <input type="text" class="four" placeholder='{% trans "Fournisseur" %}' id="supply-product-four">
 
                 </div>
@@ -124,10 +124,10 @@
                     <div class="form-row">
                         <button class="first-button" onclick="scanBarcode(this, searchByBarcode)">{% trans "Scanner Code bar" %}</button>
                         <input type="number" class="product-code hidden" id="change-product-price-id">
-                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, false, false)">
+                        <input type="text" class="product-search necessary" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, false, false)">
                     </div>
                     <div class="form-row">
-                        <input type="number" class="price" placeholder="{% trans 'Prix de vente' %}" id="change-product-price-price">
+                        <input type="number" class="price necessary" placeholder="{% trans 'Prix de vente' %}" id="change-product-price-price">
                     </div>
                     <div id="search-results" class="search-results hidden"></div>
                 </div>
@@ -142,7 +142,7 @@
                 <div class="form-container">
                     <div class="form-row">
                         <input type="number" class="product-code hidden" id="delete-product-id">
-                        <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, false, false)">
+                        <input type="text" class="product-search necessary" placeholder="{% trans 'Rechercher un produit' %}" oninput="search(this, null, false, false)">
                     </div>
                     <div id="search-results" class="search-results hidden"></div>
                 </div>
@@ -157,7 +157,7 @@
             <div class="form-container">
                 <div class="form-row">
                     <input type="number" class="product-code hidden" id="change-product-barcode-code">
-                    <input type="text" class="product-search" placeholder="{% trans 'Rechercher un produit' %}"
+                    <input type="text" class="product-search necessary" placeholder="{% trans 'Rechercher un produit' %}"
                            oninput="search(this, 'product-barcode-change-search-results', true, false)">
                 </div>
                 <div id="product-barcode-change-search-results" class="search-results hidden"></div>
@@ -165,7 +165,7 @@
                     <button class="first-button"
                             onclick="scanBarcode(this.parentElement, setProductChangeBarcodeValue)">
                         {% trans "Scanner Code bar" %}</button>
-                    <input type="text" id="change-product-barcode-barcode" placeholder="Code barre">
+                    <input type="text" id="change-product-barcode-barcode" class="necessary" placeholder="Code barre">
                 </div>
             </div>
             <div class="buttons-line">
@@ -186,7 +186,7 @@
             <hr class="sep">
             <div id="new-category" class="form-container hidden">
                 <div class="form-row">
-                    <input type="text" placeholder="{% trans 'Nom de la categorie' %}" id="new-category-name">
+                    <input type="text" class="necessary" placeholder="{% trans 'Nom de la categorie' %}" id="new-category-name">
                 </div>
                 <div class="buttons-line">
                     <button id="save-category-btn" class="normal-action" onclick="addCategory()">{% trans "Enregistrer" %}</button>
@@ -195,7 +195,7 @@
             {% if gerant.est_super_admin %}
                 <div id="delete-category" class="form-container hidden">
                     <div class="form-row">
-                        <select id="category-name">
+                        <select id="category-name" class="necessary">
                             {% for category in categories %}
                                 <option value="{{ category.id_categ }}">{{ category.nom }}</option>
                             {% endfor %}
@@ -221,11 +221,11 @@
             <hr class="sep">
             <div id="new-gerant" class="form-container hidden">
                 <div class="form-row">
-                    <input type="text" placeholder="Nom du gérant" id="new-gerant-name">
-                    <input type="password" placeholder="Mdp du gérant" id="new-gerant-pwd">
+                    <input type="text" placeholder="Nom du gérant" id="new-gerant-name" class="necessary">
+                    <input type="password" placeholder="Mdp du gérant" id="new-gerant-pwd" class="necessary">
                 </div>
                 <div class="form-row">
-                    <select id="new-gerant-site">
+                    <select id="new-gerant-site" class="necessary">
                         {% for site in sites %}
                             <option value="{{ site.nom }}">{{ site.nom }}</option>
                         {% endfor %}
@@ -239,7 +239,7 @@
             </div>
             <div id="promote-gerant" class="form-container hidden">
                 <div class="form-row">
-                    <select id="promote-gerant-selection">
+                    <select id="promote-gerant-selection" class="necessary">
                         {% for gerant in gerants %}
                             {% if not gerant.est_admin%}
                                 <option value="{{ gerant.gerant }}">{{ gerant.nom }}</option>
@@ -254,7 +254,7 @@
             </div>
             <div id="demote-gerant" class="form-container hidden">
                 <div class="form-row">
-                    <select id="demote-gerant-selection">
+                    <select id="demote-gerant-selection" class="necessary">
                         {% for gerant in gerants %}
                             {% if gerant.est_admin%}
                                 <option value="{{ gerant.gerant }}">{{ gerant.nom }}</option>
@@ -269,7 +269,7 @@
             </div>
             <div id="delete-gerant" class="form-container hidden">
                 <div class="form-row">
-                    <select id="delete-gerant-selection">
+                    <select id="delete-gerant-selection" class="necessary">
                         {% for gerant in gerants %}
                             <option value="{{ gerant.gerant }}">{{ gerant.nom }}</option>
                         {% endfor %}
@@ -282,7 +282,7 @@
             </div>
             <div id="add-site" class="form-container hidden">
                 <div class="form-row">
-                    <input type="text" placeholder="Nom du site" id="new-site-name">
+                    <input type="text" placeholder="Nom du site" id="new-site-name" class="necessary">
                 </div>
 
                 <div class="buttons-line">

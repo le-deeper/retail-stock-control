@@ -12,6 +12,7 @@
     --third-btn: #13d5bc;
     --second-btn: #d5b828;
     --normal-action: #4bae15;
+    --necessary: rgb(0, 255, 0);
 }
 
 /* Polices */
@@ -530,4 +531,8 @@ button {
 .expanded-info p {
     font-size: 1.1em;
     margin: 2px;
+}
+
+.necessary {
+    border: 2px solid var(--necessary) !important;
 }

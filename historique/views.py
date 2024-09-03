@@ -4,7 +4,6 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
-from django.utils.translation import gettext_lazy as _
 
 from commande.models import *
 from direction.models import Site, Parametre
@@ -32,7 +31,7 @@ def get_order_history(request, gerant):
 
         filtered_commands = search_commands(query, by_client, by_date, by_method, by_gerant)
         if not filtered_commands and not by_total and not by_products:
-            messages.error(request, _(BAD_SEARCH))
+            messages.error(request, BAD_SEARCH)
         commands_total = CommandeTotale.objects.all()
         if site:
             commands_total.filter(gerant__site=site)
@@ -52,7 +51,7 @@ def get_order_history(request, gerant):
                             if (by_products and produit) else True)):
                         commands.append(command)
             except ValueError:
-                messages.error(request, _(BAD_SEARCH))
+                messages.error(request, BAD_SEARCH)
         else:
             commands = commands_total
         return render(request, 'order_history.html', {'query': query, 'commands': commands,
@@ -108,7 +107,7 @@ def download_order(request, order_id, gerant):
     command_total = CommandeTotale.objects.get(id_commande=order_id)
     if site:
         if command_total.gerant.site != site and not gerant.est_super_admin:
-            messages.error(request, _(COMMAND_CANT_BE_DOWNLOADED))
+            messages.error(request, COMMAND_CANT_BE_DOWNLOADED)
             return redirect('/')
 
     command = Commande(command_total)
