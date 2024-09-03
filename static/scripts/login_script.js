@@ -8,6 +8,7 @@ async function login() {
     sendRequest('/login/', { username: username, password: password }, null, 'POST').then(
         data => {
             if (data.status !== 'error') {
+                setCookie('session', data.session, 5)
                 window.location.href = '/';
             }
         }
