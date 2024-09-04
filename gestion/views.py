@@ -157,7 +157,7 @@ def submit_order(request, gerant):
             quantity = product.get('quantity')
             price = product.get('price')
             is_gift = product.get('is_gift', False)
-            prod = search_engine(Produit, 'id_prod', product_code)[0]
+            prod = search_engine(Produit, 'id_prod', product_code, True)[0]
             prod: Produit
             if prod.prix_vente > float(price):
                 action = create_selling_under_price_action(gerant, prod, price)
@@ -172,6 +172,7 @@ def submit_order(request, gerant):
             try:
                 stock = Stock.objects.filter(prod=prod, site=site).get()
             except Stock.DoesNotExist:
+                command_total.delete()
                 return JsonResponse({'status': 'error', 'message': QUANTITY_NOT_ENOUGH},
                                     status=400)
             if stock.qte < int(quantity):
