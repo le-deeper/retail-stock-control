@@ -1,4 +1,5 @@
-# Retail Stock Control
+# Retail Stock Control 
+You can see screenshots of the application in the last section.
 
 ## Presentation
 Web application to manage stock, orders and supplies for a retail business.
@@ -127,9 +128,42 @@ DATABASES = {
 }
 ```
 
-
-
 ## Credits
 __*Author*__: Abdallahi El Housseine  
 This project is under MIT license and logo.png is under flaticon license
 (https://www.flaticon.com/free-icon/packages_2979677?term=stock&page=1&position=7)
+
+
+## Screenshots
+![login.png](screenshots/login.png)
+<u>Login page</u>
+
+![menu.png](screenshots/menu.png)
+<u>Menu (all elements forced to the hover state)</u>
+
+![home.png](screenshots/home.png)
+<u>Home page when logged in as admin</u>
+
+![home nonadmin.png](screenshots/home nonadmin.png)
+<u>Home page when logged in as non-admin</u>
+
+![new order.png](screenshots/neworder detail.png)
+<u>Order section</u>
+
+![stock.png](screenshots/stock.png)
+<u>Stock page</u>
+
+![check stock.png](screenshots/checks.png)
+<u>Check stock page</u>
+
+![orders.png](screenshots/orders.png)
+<u>Orders page</u>
+
+![stats.png](screenshots/stats.png)
+<u>Statistics page</u>
+
+![revenue.png](screenshots/revenue.png)
+<u>Example of sections in statistics (revenue) </u>
+
+![revenue value.png](screenshots/revenue value.png)
+<u>Example of sections in statistics (revenue value) </u>
