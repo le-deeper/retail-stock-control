@@ -144,10 +144,10 @@ This project is under MIT license and logo.png is under flaticon license
 ![home.png](screenshots/home.png)
 <u>Home page when logged in as admin</u>
 
-![home nonadmin.png](screenshots/home nonadmin.png)
+![home nonadmin.png](screenshots/homenonadmin.png)
 <u>Home page when logged in as non-admin</u>
 
-![new order.png](screenshots/neworder detail.png)
+![new order.png](screenshots/neworderdetail.png)
 <u>Order section</u>
 
 ![stock.png](screenshots/stock.png)
@@ -165,5 +165,5 @@ This project is under MIT license and logo.png is under flaticon license
 ![revenue.png](screenshots/revenue.png)
 <u>Example of sections in statistics (revenue) </u>
 
-![revenue value.png](screenshots/revenue value.png)
+![revenue value.png](screenshots/revenuevalue.png)
 <u>Example of sections in statistics (revenue value) </u>
